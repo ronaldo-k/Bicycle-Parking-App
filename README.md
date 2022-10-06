@@ -25,4 +25,4 @@ cycling and parking.
 - As a user, I want to filter a search query by type or characteristics (e.g. whether it is sheltered from the rain) of 
   the facility.
 - As a user, I want to be able to see reports on the incidence of bicycle theft for a given parking facility.
-- As a user, I want to be able to report that one of my bikes were stolen from a given parking facility.x
+- As a user, I want to be able to report that one of my bikes were stolen from a given parking facility.
