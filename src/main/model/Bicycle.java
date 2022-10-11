@@ -1,16 +1,23 @@
 package model;
 
+/*
+This class represents bicycles, which carry a name (defined by the Cyclist that creates the bicycle), a brand, a
+model, a user defined description and a serial number (which is represented as a String to accommodate alphanumeric
+serial numbers). Of all fields, only serialNumber cannot be null, as it will be used as a unique identifier for each
+bicycle.
+*/
+
 public class Bicycle {
     private String name;
-    private String type;
     private String brand;
     private String model;
     private String description;
     private String serialNumber;
 
-    public Bicycle(String name, String type, String brand, String model, String description, String serialNumber) {
+    // REQUIRES: serialNumber is not null
+    // EFFECTS:  Creates bicycle with their corresponding name, type, brand, model, description and serialNumber.
+    public Bicycle(String name, String brand, String model, String description, String serialNumber) {
         this.name = name;
-        this.type = type;
         this.brand = brand;
         this.model = model;
         this.description = description;
@@ -19,10 +26,6 @@ public class Bicycle {
 
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public String getBrand() {
