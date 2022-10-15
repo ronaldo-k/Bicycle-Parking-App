@@ -10,6 +10,7 @@ public class ParkingSpot implements PointOfInterest {
     private boolean isRestrictedAccess;
     private boolean requiresLock;
     private String description;
+    private int theftReportNumber;
     /** Variable conventions:
      * - type is one of: "Rack", "Locker", "Locking rack" or "Parkade"
      * - price is given in cents. This is the price that must be paid per period.
@@ -38,6 +39,7 @@ public class ParkingSpot implements PointOfInterest {
         this.isRestrictedAccess = isRestrictedAccess;
         this.requiresLock = requiresLock;
         this.description = description;
+        this.theftReportNumber = 0;
     }
 
     @Override
@@ -63,6 +65,34 @@ public class ParkingSpot implements PointOfInterest {
 
     public String getDescription() {
         return description;
+    }
+
+    public int getTheftReportNumber() {
+        return theftReportNumber;
+    }
+
+    // EFFECTS: Returns a formatted description of the parkingSpot.
+    public String getFormattedDescription(String pretab) {
+        /* This description is formatted as follows:
+        (Address)
+         - Type: (Type)
+         - Price: $(Price)/Period
+         - Is it covered? (True or False)
+         - Is its access restricted? (True or False)
+         - Does it require a lock? (True or False)
+         - Number of theft reports registered? (Number of theft reports)
+         - Details: (Description)
+         Note: pretab is a sequence of tab (i.e. \t) characters placed before each new line.
+         */
+        return this.address.getFormattedAddress() + "\n"
+                + pretab + "\tType: " + this.type + "\n"
+                + pretab + "\tCapacity: " + this.capacity + "\n"
+                + pretab + "\tPrice: $" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h\n"
+                + pretab + "\tIs it covered? " + this.isCovered + "\n"
+                + pretab + "\tIs its access restricted? " + this.isRestrictedAccess + "\n"
+                + pretab + "\tDoes it require a lock? " + this.requiresLock + "\n"
+                + pretab + "\tNumber of theft reports registered: " + this.theftReportNumber + "\n"
+                + pretab + "\tDetails: " + this.description;
     }
 
     public boolean isCovered() {
@@ -91,5 +121,9 @@ public class ParkingSpot implements PointOfInterest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void incrementTheftReportNumber() {
+        theftReportNumber++;
     }
 }

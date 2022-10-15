@@ -2,7 +2,7 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,15 +13,15 @@ public class TheftReportTest {
     private ParkingSpot parkingSpot = new ParkingSpot(parkingSpotAddress, "Rack", 14, 0, 0,
             false, false, true, "To the South of the X wing of the ICICS/CS building. Visible from the X wing " +
             "first floor lounge");
-    private LocalDateTime dateTime = LocalDateTime.of(2022, 9, 19, 14, 15);
+    private LocalDate date = LocalDate.of(2022, 9, 19);
 
-    private TheftReport theftReport = new TheftReport(bicycle, parkingSpot, dateTime);
+    private TheftReport theftReport = new TheftReport(bicycle, parkingSpot, date);
 
     @Test
     public void constructorTest() {
         assertEquals(bicycle, theftReport.getBicycle());
         assertEquals(parkingSpot, theftReport.getParkingSpot());
-        assertEquals(dateTime, theftReport.getDateTime());
+        assertEquals(date, theftReport.getDate());
         assertFalse(theftReport.wasRecovered());
     }
 

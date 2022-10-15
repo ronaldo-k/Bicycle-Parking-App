@@ -24,6 +24,23 @@ public class Bicycle {
         this.serialNumber = serialNumber;
     }
 
+    // EFFECTS: Returns a formatted description of the bicycle.
+    public String getFormattedDescription(String pretab) {
+        /* This description is formatted as follows:
+        (Name)
+            Brand: (Brand)
+            Model: (Model)
+            Description: (Description)
+            Serial number: (Serial number)
+         Note: pretab is a sequence of tab (i.e. \t) characters placed before each new line.
+         */
+        return this.name.toUpperCase() + "\n"
+                + pretab + "\tBrand: " + this.brand + "\n"
+                + pretab + "\tModel: " + this.model + "\n"
+                + pretab + "\tDescription: " + this.description + "\n"
+                + pretab + "\tSerial number: " + this.serialNumber;
+    }
+
     public String getName() {
         return name;
     }

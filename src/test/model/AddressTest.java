@@ -10,7 +10,7 @@ public class AddressTest {
     public void constructorTest() {
         address = new Address("2366", "Main Mall", "Vancouver", "V6T1Z4");
         assertEquals("2366", address.getBuildingNumber());
-        assertEquals("Agronomy Road", address.getStreetName());
+        assertEquals("Main Mall", address.getStreetName());
         assertEquals("Vancouver", address.getCity());
         assertEquals("V6T1Z4", address.getPostalCode());
     }
