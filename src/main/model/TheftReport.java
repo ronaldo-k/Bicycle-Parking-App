@@ -49,7 +49,6 @@ public class TheftReport {
                 + " on " + this.date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-
     public Bicycle getBicycle() {
         return bicycle;
     }

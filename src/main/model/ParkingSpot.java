@@ -1,5 +1,12 @@
 package model;
 
+/*
+This class represents bicycle parking spots, which carry an address, a type, a capacity, a price per period (as two
+separate values), and a description with special boolean variables for three basic attributes: whether the parking
+spot is sheltered, whether its access is restricted and whether it requires the use of a lock. While the address does
+not need to be unique, there should not be two different ParkingSpot objects with all variables matching.
+ */
+
 public class ParkingSpot implements PointOfInterest {
     private Address address;
     private String type;
@@ -15,7 +22,7 @@ public class ParkingSpot implements PointOfInterest {
      * - type is one of: "Rack", "Locker", "Locking rack" or "Parkade"
      * - price is given in cents. This is the price that must be paid per period.
      * - period is given in hours.
-     * > Free to use parking spots have price = period = 0.
+     * (Note: Free to use parking spots have price = period = 0)
      * - isCovered is true if the parking spot is sheltered from the elements.
      * - isRestrictedAccess is true when a permit is required to access the parking spot. (e.g. bicycle cages at UBC
      * have isRestrictedAccess = true, given that it requires a parking permit or UBC card)
@@ -84,7 +91,7 @@ public class ParkingSpot implements PointOfInterest {
          - Details: (Description)
          Note: pretab is a sequence of tab (i.e. \t) characters placed before each new line.
          */
-        return this.address.getFormattedAddress() + "\n"
+        return this.address.getFormattedAddress().toUpperCase() + "\n"
                 + pretab + "\tType: " + this.type + "\n"
                 + pretab + "\tCapacity: " + this.capacity + "\n"
                 + pretab + "\tPrice: $" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h\n"

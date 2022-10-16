@@ -1,10 +1,10 @@
 package model;
 
 /*
-Catch-all interface for points of interest, which may or may not be ParkingSpots.
+Catch-all interface for points of interest, which may or may not (in future implementations) be ParkingSpots.
  */
 public interface PointOfInterest {
-    public Address getAddress();
+    Address getAddress();
 
-    public void setAddress(Address address);
+    void setAddress(Address address);
 }
