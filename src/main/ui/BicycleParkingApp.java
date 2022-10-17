@@ -2,10 +2,12 @@ package ui;
 
 import model.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+
+/*
+ Class that represents an instance of the bicycle parking program. A BicycleParkingApp object is declared in
+ the Main class.
+ */
 
 public class BicycleParkingApp {
     private CyclistListManager cyclistListManager;
@@ -37,7 +39,8 @@ public class BicycleParkingApp {
         }
     }
 
-    // EFFECTS: Prints main menu and waits for user's input
+    // MODIFIES: May modify currentCyclist, depending on the chosen option.
+    // EFFECTS: Prints main menu and waits for user's input.
     private int cyclistMainMenu() {
         int input;
         System.out.println("\nMAIN MENU\nPlease enter the number of one of the options below:\n"

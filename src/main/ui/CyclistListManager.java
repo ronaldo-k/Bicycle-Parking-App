@@ -1,6 +1,5 @@
 package ui;
 
-import model.Bicycle;
 import model.Cyclist;
 
 import java.util.ArrayList;

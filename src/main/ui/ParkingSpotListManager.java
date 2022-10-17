@@ -44,6 +44,7 @@ public class ParkingSpotListManager {
             + "Columbia (UBC) only. These may obtain a bicycle cage permit in the UBC parking website with a "
             + "UBCcard.");
 
+    // EFFECTS: Creates an instance of ParkingSpotListManager with the sample set of parking spots.
     public ParkingSpotListManager() {
         parkingSpots = new ArrayList<>();
         scanner = new Scanner(System.in);

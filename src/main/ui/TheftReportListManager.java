@@ -15,6 +15,7 @@ public class TheftReportListManager {
     Cyclist cyclist;
     Scanner scanner;
 
+    // EFFECTS: Creates a TheftReportListManager object for the passed cyclist with no registered theft reports.
     public TheftReportListManager(Cyclist cyclist) {
         theftReports = new ArrayList<>();
         scanner = new Scanner(System.in);

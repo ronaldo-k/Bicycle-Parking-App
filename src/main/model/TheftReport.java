@@ -24,15 +24,6 @@ public class TheftReport {
         this.wasRecovered = false;
     }
 
-    // REQUIRES: No null parameters
-    // EFFECTS:  Creates a theft report.
-    public TheftReport(Bicycle bicycle, ParkingSpot parkingSpot, int day, int month, int year) {
-        this.bicycle = bicycle;
-        this.parkingSpot = parkingSpot;
-        this.date = LocalDate.of(year, month, day);
-        this.wasRecovered = false;
-    }
-
     // EFFECTS: Returns a formatted description of the bicycle.
     public String getFormattedDescription() {
         /* This description is formatted as follows:

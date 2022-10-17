@@ -3,16 +3,17 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-/* This class implements the methods of cyclists, the primary users of the program. All cyclists have an initially
+/*
+This class implements the methods of cyclists, the primary users of the program. All cyclists have an initially
 empty list of bicycles, to which at least one bicycle should be added in order to access certain methods, and a
 theft report list, which represents the theft reports they created.
-* */
+ */
 
 public class Cyclist extends User {
     private List<Bicycle> bicycles;
     private List<TheftReport> theftReports;
 
-    // REQUIRES: username not null
+    // REQUIRES: name is not null
     // EFFECTS:  New Cyclist object is created with no registered bicycles.
     public Cyclist(String name) {
         this.name = name;
