@@ -1,12 +1,12 @@
 package ui;
 
 import model.Address;
+import model.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 
 import java.util.List;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -68,11 +68,16 @@ public class ParkingSpotListManager {
 
         System.out.printf("\nSEARCH FOR A PARKING SPOT\n\tWhat postal code would you like to search? ");
         inputPostalCode = scanner.nextLine();
-        viewParkingSpots(inputPostalCode);
+        try {
+            viewParkingSpots(inputPostalCode);
+        } catch (NoParkingSpotsFoundException e) {
+            // In this function, if NoParkingSpotsFoundException is caught no specific action is taken.
+            // The catch statement here is only intended to keep the program from crashing.
+        }
     }
 
     // EFFECTS: Prints out a list of bicycle parking spots available in the provided inputPostalCode.
-    public List<ParkingSpot> viewParkingSpots(String inputPostalCode) {
+    public List<ParkingSpot> viewParkingSpots(String inputPostalCode) throws NoParkingSpotsFoundException {
         List<ParkingSpot> searchResults = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
@@ -81,8 +86,8 @@ public class ParkingSpotListManager {
             }
         }
         if (searchResults.size() == 0) {
-            System.out.println("\tNo parking spots with the postal code " + inputPostalCode + " have been found.");
-            return null;
+            System.out.printf("No parking spots with this postal code were found.\n");
+            throw new NoParkingSpotsFoundException();
         }
 
         System.out.println("The following parking spots with the postal code " + inputPostalCode

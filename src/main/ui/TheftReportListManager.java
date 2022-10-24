@@ -2,6 +2,7 @@ package ui;
 
 import model.Bicycle;
 import model.Cyclist;
+import model.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 import model.TheftReport;
 
@@ -41,21 +42,26 @@ public class TheftReportListManager {
 
     // MODIFIES: this
     // EFFECTS:  Adds a theft report with user-provided details to the list of theftReports.
+    // TODO: Reduce method length
     public void addTheftReport(ParkingSpotListManager parkingSpotListManager, BicycleListManager bicycleListManager) {
         Bicycle bicycle;
         LocalDate date;
         List<ParkingSpot> parkingSpotSearchResults;
         ParkingSpot parkingSpot;
 
-        System.out.printf("\nFILE A THEFT REPORT\n");
+        System.out.printf("\nFILE A THEFT REPORT\n%s,");
         bicycleListManager.viewBicycles();
         System.out.println("Which bicycle has been stolen? ");
 
         bicycle = cyclist.getBicycles().get(scanner.nextInt() - 1);
 
         System.out.println("Please input the postal code of the parking spot from which your bicycle was stolen: ");
-        scanner.nextLine(); // Workaround to prevent skipping the subsequent nextLine command.
-        parkingSpotSearchResults = parkingSpotListManager.viewParkingSpots(scanner.nextLine());
+        scanner.nextLine(); // Workaround to prevent skipping of the subsequent nextLine command.
+        try {
+            parkingSpotSearchResults = parkingSpotListManager.viewParkingSpots(scanner.nextLine());
+        } catch (NoParkingSpotsFoundException e) {
+            return;
+        }
 
         System.out.println("From which of these parking spots has your bicycle been stolen?");
         parkingSpot = parkingSpotSearchResults.get(scanner.nextInt() - 1);
