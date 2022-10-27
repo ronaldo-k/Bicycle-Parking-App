@@ -15,4 +15,5 @@ public class BicycleTest {
         assertEquals("Green bike, no accessories", bicycle.getDescription());
         assertEquals("H81P1936784P0M", bicycle.getSerialNumber());
     }
+
 }

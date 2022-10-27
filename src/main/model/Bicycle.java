@@ -7,7 +7,10 @@ serial numbers). Of all fields, only serialNumber cannot be null, as it will be 
 bicycle.
 */
 
-public class Bicycle {
+import org.json.JSONObject;
+import persistence.Saveable;
+
+public class Bicycle implements Saveable {
     private String name;
     private String brand;
     private String model;
@@ -59,5 +62,17 @@ public class Bicycle {
 
     public String getSerialNumber() {
         return serialNumber;
+    }
+
+    // EFFECTS: Returns the JSONArray formatted version of a bicycle.
+    @Override
+    public JSONObject toJson() {
+        JSONObject result = new JSONObject();
+        result.put("name", name);
+        result.put("brand", brand);
+        result.put("model", model);
+        result.put("description", description);
+        result.put("serialNumber", serialNumber);
+        return result;
     }
 }

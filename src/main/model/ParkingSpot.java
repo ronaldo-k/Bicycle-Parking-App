@@ -7,7 +7,10 @@ spot is sheltered, whether its access is restricted and whether it requires the 
 not need to be unique, there should not be two different ParkingSpot objects with all variables matching.
  */
 
-public class ParkingSpot implements PointOfInterest {
+import org.json.JSONObject;
+import persistence.Saveable;
+
+public class ParkingSpot implements PointOfInterest, Saveable {
     private Address address;
     private String type;
     private int capacity;
@@ -33,8 +36,8 @@ public class ParkingSpot implements PointOfInterest {
      */
 
     // REQUIRES: address and type are not null, capacity > 0.
-    // EFFECTS:  Creates ParkingSpot of a certain type with a certain capacity on a given address. All spots are
-    // initially unoccupied.
+    // EFFECTS:  Creates ParkingSpot of a certain type with a certain capacity on a given address with zero
+    // associated theft reports
     public ParkingSpot(Address address, String type, int capacity, int price, int period, boolean isCovered,
                        boolean isRestrictedAccess, boolean requiresLock, String description) {
         this.address = address;
@@ -47,6 +50,25 @@ public class ParkingSpot implements PointOfInterest {
         this.requiresLock = requiresLock;
         this.description = description;
         this.theftReportNumber = 0;
+    }
+
+    // Note: This function is used exclusively for parsing a ParkingSpot from a JSONObject. To create a new “blank”
+    // ParkingSpot, use the first constructor.
+    // REQUIRES: address and type are not null, capacity > 0.
+    // EFFECTS:  Creates ParkingSpot of a certain type with a certain capacity and number of theft reports on a given
+    // address
+    public ParkingSpot(Address address, String type, int capacity, int price, int period, boolean isCovered,
+                       boolean isRestrictedAccess, boolean requiresLock, String description, int theftReportNumber) {
+        this.address = address;
+        this.type = type;
+        this.capacity = capacity;
+        this.price = price;
+        this.period = period;
+        this.isCovered = isCovered;
+        this.isRestrictedAccess = isRestrictedAccess;
+        this.requiresLock = requiresLock;
+        this.description = description;
+        this.theftReportNumber = theftReportNumber;
     }
 
     @Override
@@ -118,19 +140,25 @@ public class ParkingSpot implements PointOfInterest {
         this.address = address;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void incrementTheftReportNumber() {
         theftReportNumber++;
+    }
+
+
+    // EFFECTS: Returns the JSON formatted version of a ParkingSpot
+    @Override
+    public JSONObject toJson() {
+        JSONObject result = new JSONObject();
+        result.put("address", address.toJson());
+        result.put("type", type);
+        result.put("capacity", capacity);
+        result.put("price", price);
+        result.put("period", period);
+        result.put("isCovered", isCovered);
+        result.put("isRestrictedAccess", isRestrictedAccess);
+        result.put("requiresLock", requiresLock);
+        result.put("description", description);
+        result.put("theftReportNumber", theftReportNumber);
+        return result;
     }
 }

@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,16 @@ public class Cyclist extends User {
         this.name = name;
         this.bicycles = new ArrayList<>();
         this.theftReports = new ArrayList<>();
+    }
+
+    // Note: This function is used exclusively for parsing a Cyclist from a JSONObject. To create a new “blank” Cyclist
+    // use the first constructor.
+    // REQUIRES: name is not null
+    // EFFECTS:  New Cyclist object is created with a list of registered bicycles and theft reports.
+    public Cyclist(String name, List<Bicycle> bicycles, List<TheftReport> theftReports) {
+        this.name = name;
+        this.bicycles = bicycles;
+        this.theftReports = theftReports;
     }
 
     // MODIFIES: this
@@ -47,19 +59,44 @@ public class Cyclist extends User {
         theftReports.add(theftReport);
     }
 
-    // REQUIRES: theftReport is in theftReports
-    // MODIFIES: this
-    // EFFECTS:  Removes theftReport to the theftReports list.
-    @Override
-    public void removeTheftReport(TheftReport theftReport) {
-        theftReports.remove(theftReport);
-    }
-
     public List<Bicycle> getBicycles() {
         return bicycles;
     }
 
     public List<TheftReport> getTheftReports() {
         return theftReports;
+    }
+
+
+    // EFFECTS: Returns the JSONObject formatted version of a TheftReport
+    @Override
+    public JSONObject toJson() {
+        JSONObject result = new JSONObject();
+        result.put("name", name);
+        result.put("bicycles", bicyclesToJson());
+        result.put("theftReports", theftReportsToJson());
+        return result;
+    }
+
+    // EFFECTS: Returns the JSONArray formatted version of the bicycles list.
+    private JSONArray bicyclesToJson() {
+        JSONArray result = new JSONArray();
+
+        for (Bicycle b : bicycles) {
+            result.put(b.toJson());
+        }
+
+        return result;
+    }
+
+    // EFFECTS: Returns the JSONArray formatted version of the theftReports list.
+    private JSONArray theftReportsToJson() {
+        JSONArray result = new JSONArray();
+
+        for (TheftReport r : theftReports) {
+            result.put(r.toJson());
+        }
+
+        return result;
     }
 }

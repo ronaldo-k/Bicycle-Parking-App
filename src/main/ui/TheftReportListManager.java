@@ -49,7 +49,7 @@ public class TheftReportListManager {
         List<ParkingSpot> parkingSpotSearchResults;
         ParkingSpot parkingSpot;
 
-        System.out.printf("\nFILE A THEFT REPORT\n%s,");
+        System.out.printf("\nFILE A THEFT REPORT\n");
         bicycleListManager.viewBicycles();
         System.out.println("Which bicycle has been stolen? ");
 

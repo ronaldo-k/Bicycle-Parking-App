@@ -7,7 +7,10 @@ owner/governmental agency user, that does not necessarily own bicycles but can f
 (that is, without all characteristics of a certain bicycle) and can create parkingSpots.
 */
 
-public abstract class User {
+import org.json.JSONObject;
+import persistence.Saveable;
+
+public abstract class User implements Saveable {
     protected String name;
 
     public String getName() {
@@ -20,5 +23,5 @@ public abstract class User {
 
     public abstract void addTheftReport(TheftReport theftReport);
 
-    public abstract void removeTheftReport(TheftReport theftReport);
+    public abstract JSONObject toJson();
 }

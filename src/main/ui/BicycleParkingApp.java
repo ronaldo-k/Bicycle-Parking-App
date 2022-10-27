@@ -41,6 +41,9 @@ public class BicycleParkingApp {
 
     // MODIFIES: May modify currentCyclist, depending on the chosen option.
     // EFFECTS: Prints main menu and waits for user's input.
+    // TODO: Add a function to allow the addition of parkingSpots (this is a feature not intended to be viewed by the
+    //  end user, and instead exists to allow for easier addition of parkingSpots to the file that stores them in
+    //  JSON format.
     private int cyclistMainMenu() {
         int input;
         System.out.println("\nMAIN MENU\nPlease enter the number of one of the options below:\n"

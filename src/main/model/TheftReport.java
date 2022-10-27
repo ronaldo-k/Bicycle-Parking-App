@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Saveable;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +12,7 @@ a date of theft. In order to store theft reports after the bicycle was recovered
 not deleted upon recovery, rather it is marked as recovered by setting wasRecovered to true.
 */
 
-public class TheftReport {
+public class TheftReport implements Saveable {
     private Bicycle bicycle;
     private ParkingSpot parkingSpot;
     private LocalDate date;
@@ -60,5 +63,18 @@ public class TheftReport {
     // EFFECTS:  Indicates bicycle was recovered.
     public void recover() {
         wasRecovered = true;
+    }
+
+    // EFFECTS: Returns the JSON formatted version of a TheftReport
+    @Override
+    public JSONObject toJson() {
+        JSONObject result = new JSONObject();
+        result.put("bicycle", bicycle.toJson());
+        result.put("parkingSpot", parkingSpot.toJson());
+        result.put("dateDay", date.getDayOfMonth());
+        result.put("dateMonth", date.getMonthValue());
+        result.put("dateYear", date.getYear());
+        result.put("wasRecovered", wasRecovered);
+        return result;
     }
 }

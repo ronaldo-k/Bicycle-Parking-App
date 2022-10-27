@@ -5,7 +5,10 @@ Helper class that stores an address as internally separate variables for buildin
 code. The building number is stored as a string in order to accommodate buildings with alphanumeric building numbers.
  */
 
-public class Address {
+import org.json.JSONObject;
+import persistence.Saveable;
+
+public class Address implements Saveable {
     private String buildingNumber;
     private String streetName;
     private String city;
@@ -41,19 +44,14 @@ public class Address {
         return postalCode;
     }
 
-    public void setBuildingNumber(String buildingNumber) {
-        this.buildingNumber = buildingNumber;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    // EFFECTS: Returns the JSONObject formatted version of an address.
+    @Override
+    public JSONObject toJson() {
+        JSONObject result = new JSONObject();
+        result.put("buildingNumber", buildingNumber);
+        result.put("streetName", streetName);
+        result.put("city", city);
+        result.put("postalCode", postalCode);
+        return result;
     }
 }

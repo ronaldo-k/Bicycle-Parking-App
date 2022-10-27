@@ -11,7 +11,6 @@ A class that maintains, alters and displays a list of cyclists.
  */
 
 public class CyclistListManager {
-    BicycleListManager bicycleListManager;
     List<Cyclist> cyclists;
     Scanner scanner;
 
