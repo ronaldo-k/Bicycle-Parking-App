@@ -30,4 +30,10 @@ public class TheftReportTest {
         theftReport.recover();
         assertTrue(theftReport.wasRecovered());
     }
+
+    @Test
+    public void getFormattedDescription() {
+        String expected = "Green bike was stolen from 2366 Main Mall, Vancouver, V6T1Z4 on 2022-09-19";
+        assertEquals(expected, theftReport.getFormattedDescription());
+    }
 }

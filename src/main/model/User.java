@@ -17,9 +17,9 @@ public abstract class User implements Saveable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public abstract void addTheftReport(TheftReport theftReport);
 

@@ -6,6 +6,7 @@ A class that maintains, alters and displays a list of bicycles registered by cyc
 
 import model.Bicycle;
 import model.Cyclist;
+import model.exceptions.NoBicyclesFoundException;
 
 import java.util.Scanner;
 
@@ -58,7 +59,10 @@ public class BicycleListManager {
     }
 
     // EFFECTS: Prints out a list of the cyclist's bicycles.
-    public void viewBicycles() {
+    public void viewBicycles() throws NoBicyclesFoundException {
+        if (cyclist.getBicycles().size() == 0) {
+            throw new NoBicyclesFoundException();
+        }
         System.out.println("\nYou currently have " + cyclist.getBicycles().size() + " bicycles registered.");
         for (int i = 0; i < cyclist.getBicycles().size(); i++) {
             System.out.printf("\t[%d] %s\n", i + 1, cyclist.getBicycles().get(i).getFormattedDescription("\t"));
@@ -72,7 +76,11 @@ public class BicycleListManager {
         Bicycle bicycle;
 
         System.out.printf("\nREMOVE A BICYCLE");
-        viewBicycles();
+        try {
+            viewBicycles();
+        } catch (NoBicyclesFoundException e) {
+            System.out.println("\nThis user currently has no registered bicycles.");
+        }
         if (cyclist.getBicycles().isEmpty()) {
             return;
         }

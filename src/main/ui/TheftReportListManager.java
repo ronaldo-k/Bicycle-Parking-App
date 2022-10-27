@@ -2,6 +2,7 @@ package ui;
 
 import model.Bicycle;
 import model.Cyclist;
+import model.exceptions.NoBicyclesFoundException;
 import model.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 import model.TheftReport;
@@ -50,7 +51,13 @@ public class TheftReportListManager {
         ParkingSpot parkingSpot;
 
         System.out.printf("\nFILE A THEFT REPORT\n");
-        bicycleListManager.viewBicycles();
+        try {
+            bicycleListManager.viewBicycles();
+        } catch (NoBicyclesFoundException e) {
+            System.out.println("This user currently has no registered bicycles. Please register a bicycle before "
+                    + "filing a theft report.");
+            return;
+        }
         System.out.println("Which bicycle has been stolen? ");
 
         bicycle = cyclist.getBicycles().get(scanner.nextInt() - 1);

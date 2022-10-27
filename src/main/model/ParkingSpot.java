@@ -92,9 +92,9 @@ public class ParkingSpot implements PointOfInterest, Saveable {
         return period;
     }
 
-    public String getDescription() {
-        return description;
-    }
+//    public String getDescription() {
+//        return description;
+//    }
 
     public int getTheftReportNumber() {
         return theftReportNumber;
@@ -136,9 +136,9 @@ public class ParkingSpot implements PointOfInterest, Saveable {
         return requiresLock;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+//    public void setAddress(Address address) {
+//        this.address = address;
+//    }
 
     public void incrementTheftReportNumber() {
         theftReportNumber++;
