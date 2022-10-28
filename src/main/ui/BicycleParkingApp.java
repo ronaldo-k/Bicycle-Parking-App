@@ -36,6 +36,7 @@ public class BicycleParkingApp {
                     break; // Returns to the outer while loop (i.e. the account selection prompt).
                 } else if (menuReturnValue == 7) {
                     saveData();
+                    System.out.println("All changes made have been saved. Quitting…");
                     return; // Terminates the program.
                 } // Else, it returns to the main menu.
             }
@@ -71,7 +72,6 @@ public class BicycleParkingApp {
             case 5: viewUserProfile();
                 break;
             default:
-                System.out.println("All changes made have been saved. Quitting…");
                 return input;
         }
         return 0;

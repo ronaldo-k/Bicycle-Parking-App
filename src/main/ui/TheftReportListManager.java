@@ -47,31 +47,21 @@ public class TheftReportListManager {
     public void addTheftReport(ParkingSpotListManager parkingSpotListManager, BicycleListManager bicycleListManager) {
         Bicycle bicycle;
         LocalDate date;
-        List<ParkingSpot> parkingSpotSearchResults;
         ParkingSpot parkingSpot;
 
         System.out.printf("\nFILE A THEFT REPORT\n");
         try {
-            bicycleListManager.viewBicycles();
+            bicycle = getBicycleForTheftReport(bicycleListManager);
         } catch (NoBicyclesFoundException e) {
-            System.out.println("This user currently has no registered bicycles. Please register a bicycle before "
-                    + "filing a theft report.");
+            System.out.println("No registered bicycles found. Please register a bicycle before filing a theft report.");
             return;
         }
-        System.out.println("Which bicycle has been stolen? ");
 
-        bicycle = cyclist.getBicycles().get(scanner.nextInt() - 1);
-
-        System.out.println("Please input the postal code of the parking spot from which your bicycle was stolen: ");
-        scanner.nextLine(); // Workaround to prevent skipping of the subsequent nextLine command.
         try {
-            parkingSpotSearchResults = parkingSpotListManager.viewParkingSpots(scanner.nextLine());
+            parkingSpot = getParkingSpotForTheftReport(parkingSpotListManager);
         } catch (NoParkingSpotsFoundException e) {
             return;
         }
-
-        System.out.println("From which of these parking spots has your bicycle been stolen?");
-        parkingSpot = parkingSpotSearchResults.get(scanner.nextInt() - 1);
 
         System.out.printf("When was your bicycle stolen?");
         date = getDateFromUser();
@@ -81,6 +71,23 @@ public class TheftReportListManager {
         cyclist.addTheftReport(theftReport);
         parkingSpot.incrementTheftReportNumber();
         System.out.println("< Your theft report has been filed. > You may view it by entering [5] in the main menu.");
+    }
+
+    private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) throws NoBicyclesFoundException {
+        bicycleListManager.viewBicycles();
+        System.out.println("Which bicycle has been stolen? ");
+        return cyclist.getBicycles().get(scanner.nextInt() - 1);
+    }
+
+    private ParkingSpot getParkingSpotForTheftReport(ParkingSpotListManager parkingSpotListManager)
+            throws NoParkingSpotsFoundException {
+        List<ParkingSpot> parkingSpotSearchResults;
+        System.out.println("Please input the postal code of the parking spot from which your bicycle was stolen: ");
+        scanner.nextLine(); // Workaround to prevent skipping of the subsequent nextLine command.
+
+        parkingSpotSearchResults = parkingSpotListManager.viewParkingSpots(scanner.nextLine());
+        System.out.println("From which of these parking spots has your bicycle been stolen?");
+        return parkingSpotSearchResults.get(scanner.nextInt() - 1);
     }
 
     // EFFECTS: Prints out a list of theft reports filed by the currentCyclist.
