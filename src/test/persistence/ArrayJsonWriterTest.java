@@ -1,8 +1,12 @@
 package persistence;
 
 import model.*;
+import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,27 +32,54 @@ public class ArrayJsonWriterTest {
             "first floor lounge");
     TheftReport theftReport = new TheftReport(bicycle2, parkingSpot, LocalDate.of(2022, 10, 1));
 
-    // A nonexistent file test does not apply here because ArrayJsonWriter always creates a new file if it does not
-    // already exist.
+    Cyclist cyclist;
+    List<Saveable> cyclists;
 
-    @Test
-    public void writerOnSample1Test() {
-        Cyclist cyclist = new Cyclist("John");
+    @BeforeEach
+    public void setup() {
+        cyclist = new Cyclist("John");
         cyclist.addBicycle(bicycle1);
         cyclist.addBicycle(bicycle2);
         cyclist.addTheftReport(theftReport);
 
-        List<Saveable> cyclists = new ArrayList<>();
+        cyclists = new ArrayList<>();
         cyclists.add(cyclist);
+    }
 
+    @Test
+    // This test creates a new file called NonexistentFile.json. Certify that this file does not exist in ./data/test
+    // before running the test
+    public void openNonexistentFileTest() {
         try {
-            arrayJsonWriter = new ArrayJsonWriter("./Data/test/Sample1.json");
+            arrayJsonWriter = new ArrayJsonWriter("./data/test/NonexistentFile.json");
+            arrayJsonWriter.open();
+        } catch (FileNotFoundException e) {
+            fail("Unexpected FileNotFoundException thrown");
+        }
+    }
+
+    @Test
+    public void writerOnSample1Test() {
+        String source = "./data/test/Sample1.json";
+        try {
+            arrayJsonWriter = new ArrayJsonWriter(source);
             arrayJsonWriter.open();
             arrayJsonWriter.write(cyclists);
             arrayJsonWriter.close();
+
+            CyclistsJsonReader cyclistsJsonReader = new CyclistsJsonReader(source);
+            List<Saveable> actual = cyclistsJsonReader.read();
+
+            for (int i = 0; i < actual.size(); i++) {
+                Cyclist actualCyclist = (Cyclist) actual.get(i);
+                Cyclist expectedCyclist = (Cyclist) cyclists.get(i);
+                assertEquals(expectedCyclist.getName(), expectedCyclist.getName());
+            }
         } catch (IOException e) {
             fail("Unexpected IOException thrown.");
         }
+
+
     }
 
     @Test
@@ -62,5 +93,30 @@ public class ArrayJsonWriterTest {
         } catch (IOException e) {
             fail("Unexpected IOException thrown.");
         }
+    }
+
+    @Test
+    public void closeTest() {
+        String source = "./Data/test/EmptySample.json";
+        arrayJsonWriter = new ArrayJsonWriter(source);
+        try {
+            arrayJsonWriter.open();
+        } catch (FileNotFoundException e) {
+            fail("Unexpected FileNotFoundException thrown");
+        }
+        arrayJsonWriter.close();
+        arrayJsonWriter.write(cyclists);
+        CyclistsJsonReader cyclistsJsonReader = new CyclistsJsonReader(source);
+        List<Saveable> actual = new ArrayList<>();
+
+        try {
+            actual = cyclistsJsonReader.read();
+        } catch (IOException e) {
+            fail("Unexpected IOException thrown");
+        } catch (JSONException e) {
+            // Test passes.
+        }
+
+        assertEquals(0, actual.size());
     }
 }

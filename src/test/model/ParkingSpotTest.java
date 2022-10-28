@@ -51,6 +51,12 @@ public class ParkingSpotTest {
     }
 
     @Test
+    public void getDescriptionTest() {
+        assertEquals("To the South of the X wing of the ICICS/CS building. Visible from the X wing " +
+                "first floor lounge", parkingSpot1.getDescription());
+    }
+
+    @Test
     public void getFormattedDescriptionTest() {
         String expected = "2366 MAIN MALL, VANCOUVER, V6T1Z4\n\tType: Rack\n\tCapacity: 14\n\tPrice: $0.0 / 0 h\n\tIs" +
                 " " +

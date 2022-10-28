@@ -3,12 +3,20 @@ package persistence;
 import model.Address;
 import model.Cyclist;
 import model.ParkingSpot;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.parsers.ParkingSpotParser;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,6 +102,31 @@ public class ParkingSpotsJsonReaderTest {
             assertEquals("2424 Main Mall, Vancouver, V6T1Z4", actualParkingSpot1.getAddress().getFormattedAddress());
             assertEquals("To the West of the Forest Sciences building, facing Engineering Road.",
                     actualParkingSpot2.getDescription());
+        } catch (IOException e) {
+            fail("Unexpected IOException thrown");
+        }
+    }
+
+    private String readFile(String source) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s));
+        }
+
+        return contentBuilder.toString();
+    }
+
+    @Test
+    public void parseSaveableTest() {
+        try {
+            ParkingSpotParser parkingSpotParser = new ParkingSpotParser();
+            String jsonData = readFile(source);
+            JSONArray jsonArray = new JSONArray(jsonData);
+            ParkingSpot actual = (ParkingSpot) parkingSpotParser.parseSaveable(jsonArray.getJSONObject(0));
+
+            assertEquals("To the South of the X wing of the ICICS/CS building, facing Agronomy Road. "
+                    + "Visible from the X wing first floor lounge.", actual.getDescription());
         } catch (IOException e) {
             fail("Unexpected IOException thrown");
         }

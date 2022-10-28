@@ -4,13 +4,20 @@ import model.Address;
 import model.Bicycle;
 import model.ParkingSpot;
 import model.TheftReport;
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.parsers.ParkingSpotParser;
+import persistence.parsers.TheftReportParser;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -66,6 +73,30 @@ public class TheftReportJsonReaderTest {
             assertEquals("To the South of the X wing of the ICICS/CS building. Visible from the X wing " +
                     "first floor lounge", actualTheftReport.getParkingSpot().getDescription());
             assertEquals(LocalDate.of(2022, 10, 1), actualTheftReport.getDate());
+        } catch (IOException e) {
+            fail("Unexpected IOException thrown");
+        }
+    }
+
+    private String readFile(String source) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s));
+        }
+
+        return contentBuilder.toString();
+    }
+
+    @Test
+    public void parseSaveableTest() {
+        try {
+            TheftReportParser theftReportParser = new TheftReportParser();
+            String jsonData = readFile(source);
+            JSONArray jsonArray = new JSONArray(jsonData);
+            TheftReport actual = (TheftReport) theftReportParser.parseSaveable(jsonArray.getJSONObject(0));
+
+            assertEquals("Old bike", actual.getBicycle().getName());
         } catch (IOException e) {
             fail("Unexpected IOException thrown");
         }
