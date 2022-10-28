@@ -125,7 +125,7 @@ public class ParkingSpotsJsonReaderTest {
             JSONArray jsonArray = new JSONArray(jsonData);
             ParkingSpot expected = (ParkingSpot) parkingSpotParser.parseSaveable(jsonArray.getJSONObject(0));
 
-            ParkingSpot actual = (ParkingSpot) parkingSpotsJsonReader.read().get(0) ;
+            ParkingSpot actual = (ParkingSpot) parkingSpotsJsonReader.read().get(0);
 
             assertEquals(expected.getDescription(), actual.getDescription());
         } catch (IOException e) {

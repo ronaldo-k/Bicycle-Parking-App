@@ -5,12 +5,17 @@ import org.json.JSONObject;
 import persistence.Saveable;
 import persistence.parsers.SaveableParser;
 
-public class BicycleParser extends SaveableParser {
+/*
+Helper class used to parse a JSONObject as a bicycle (returned as a Saveable)
+ */
 
+public class BicycleParser extends SaveableParser {
+    // EFFECTS: Creates a BicycleParser, which stores no variables.
     public BicycleParser() {
 
     }
 
+    // EFFECTS: Parses a JSONObject as a bicycle and returns the bicycle.
     @Override
     public Saveable parseSaveable(JSONObject jsonObject) {
         String name = jsonObject.getString("name");

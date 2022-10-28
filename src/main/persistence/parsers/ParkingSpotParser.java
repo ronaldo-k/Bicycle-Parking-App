@@ -6,11 +6,18 @@ import org.json.JSONObject;
 import persistence.Saveable;
 import persistence.parsers.SaveableParser;
 
+/*
+Helper class used to parse a JSONObject as a parkingSpot (returned as a Saveable)
+ */
+
 public class ParkingSpotParser extends SaveableParser {
+
+    // EFFECTS: Creates a ParkingSpotParser, which stores no variables.
     public ParkingSpotParser() {
 
     }
 
+    // EFFECTS: Parses a JSONObject as a parkingSpot and returns the parkingSpot (as a Saveable)
     @Override
     public Saveable parseSaveable(JSONObject jsonObject) {
         Address address = parseAddress(jsonObject.getJSONObject("address"));

@@ -18,6 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/*
+Abstract class from which readers that parse JSONArrays as List<Saveable> are extended. Classes that read Cyclists,
+ParkingSpots and TheftReports are extended from this, accounting for the different data each of these classes store.
+
+Code adapted from Carter, P. (2021) “JSON Serialization Demo”.
+ */
+
 public abstract class ArrayJsonReader {
     private String fileName;
 
