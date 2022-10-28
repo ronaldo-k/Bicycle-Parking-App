@@ -30,10 +30,10 @@ public class ArrayJsonWriter {
 
     // MODIFIES: this
     // EFFECTS:  Writes a List<Saveable> as a JSONArray on printWriter
-    public void write(List<Saveable> users) {
+    public void write(List<Saveable> saveables) {
         JSONArray jsonArray = new JSONArray();
-        for (Saveable user : users) {
-            jsonArray.put(user.toJson());
+        for (Saveable saveable : saveables) {
+            jsonArray.put(saveable.toJson());
         }
         printWriter.write(jsonArray.toString());
     }

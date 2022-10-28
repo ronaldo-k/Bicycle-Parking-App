@@ -1,9 +1,15 @@
 package ui;
 
 import model.Address;
-import model.exceptions.NoParkingSpotsFoundException;
+import model.Cyclist;
+import persistence.ArrayJsonWriter;
+import persistence.ParkingSpotsJsonReader;
+import persistence.Saveable;
+import ui.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -16,6 +22,7 @@ A class that maintains and displays a list of parking spots.
 public class ParkingSpotListManager {
     private List<ParkingSpot> parkingSpots;
     Scanner scanner;
+    String source = "./data/parkingSpots.json";
 
     // The following is a sample set of parking spots and their addresses
     Address computerScienceAddress = new Address("2366", "Main Mall", "Vancouver", "V6T1Z4");
@@ -48,7 +55,47 @@ public class ParkingSpotListManager {
     public ParkingSpotListManager() {
         parkingSpots = new ArrayList<>();
         scanner = new Scanner(System.in);
-        addSampleParkingSpots();
+        // Note: Uncomment the two following lines only if parkingSpots.json has not yet been generated. Remember to
+        // comment them back once parkingSpots.json is generated otherwise they will generate duplicate parkingSpots.
+//        addSampleParkingSpots();
+//        saveParkingSpots();
+        readParkingSpots();
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  Reads parkingSpots from parkingSpots.json and inserts them into the internal parkingSpots list.
+    public void readParkingSpots() {
+        ParkingSpotsJsonReader reader = new ParkingSpotsJsonReader(source);
+
+        try {
+            List<Saveable> saveableParkingSpots = reader.read();
+
+            for (Saveable saveable : saveableParkingSpots) {
+                parkingSpots.add((ParkingSpot) saveable);
+            }
+        } catch (IOException e) {
+            System.out.println("[Error - IOException] An unexpected error occurred while attempting to read "
+                    + "parkingSpots.json.");
+        }
+    }
+
+    // MODIFIES: data/parkingSpots.json
+    // EFFECTS:  Saves parkingSpots to parkingSpots.json
+    public void saveParkingSpots() {
+        ArrayJsonWriter writer = new ArrayJsonWriter(source);
+        List<Saveable> saveables = new ArrayList<>();
+
+        for (ParkingSpot parkingSpot : parkingSpots) {
+            saveables.add(parkingSpot);
+        }
+
+        try {
+            writer.open();
+            writer.write(saveables);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("[Error - FileNotFoundException] parkingSpots.json file not found.");
+        }
     }
 
     // MODIFIES: this

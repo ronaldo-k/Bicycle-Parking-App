@@ -92,9 +92,9 @@ public class ParkingSpot implements PointOfInterest, Saveable {
         return period;
     }
 
-//    public String getDescription() {
-//        return description;
-//    }
+    public String getDescription() {
+        return description;
+    }
 
     public int getTheftReportNumber() {
         return theftReportNumber;

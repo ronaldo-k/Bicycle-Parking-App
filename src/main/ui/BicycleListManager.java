@@ -6,7 +6,7 @@ A class that maintains, alters and displays a list of bicycles registered by cyc
 
 import model.Bicycle;
 import model.Cyclist;
-import model.exceptions.NoBicyclesFoundException;
+import ui.exceptions.NoBicyclesFoundException;
 
 import java.util.Scanner;
 

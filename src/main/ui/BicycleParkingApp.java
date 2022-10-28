@@ -1,7 +1,8 @@
 package ui;
 
 import model.*;
-import model.exceptions.NoBicyclesFoundException;
+import persistence.ArrayJsonWriter;
+import ui.exceptions.NoBicyclesFoundException;
 
 import java.util.Scanner;
 
@@ -34,10 +35,18 @@ public class BicycleParkingApp {
                 if (menuReturnValue == 6) {
                     break; // Returns to the outer while loop (i.e. the account selection prompt).
                 } else if (menuReturnValue == 7) {
+                    saveData();
                     return; // Terminates the program.
                 } // Else, it returns to the main menu.
             }
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  Saves all data (unrelated to tests) to JSON files from the list managers.
+    private void saveData() {
+        cyclistListManager.saveCyclists();
+        return;
     }
 
     // MODIFIES: May modify currentCyclist, depending on the chosen option.
@@ -48,7 +57,7 @@ public class BicycleParkingApp {
                 + "\t[1] Add bicycle \n\t[2] Remove bicycle \n"
                 + "\t[3] Search for a parking spot \n\t[4] File theft report \n"
                 + "\t[5] View user profile, theft reports and bicycles \n"
-                + "\t[6] Change user \n\t[7] Quit");
+                + "\t[6] Change user \n\t[7] Save changes and quit");
         input = scanner.nextInt();
         switch (input) {
             case 1: bicycleListManager.addBicycle();
@@ -61,7 +70,9 @@ public class BicycleParkingApp {
                 break;
             case 5: viewUserProfile();
                 break;
-            default: return input;
+            default:
+                System.out.println("All changes made have been saved. Quitting…");
+                return input;
         }
         return 0;
     }
@@ -72,7 +83,7 @@ public class BicycleParkingApp {
         try {
             bicycleListManager.viewBicycles();
         } catch (NoBicyclesFoundException e) {
-            System.out.println("This user currently has no registered bicycles.");
+            System.out.println("You currently have no registered bicycles.");
         }
         System.out.printf("\n");
         theftReportListManager.viewTheftReports();

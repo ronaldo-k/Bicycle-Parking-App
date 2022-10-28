@@ -1,4 +1,4 @@
-package model.exceptions;
+package ui.exceptions;
 
 /*
 Root class for all exceptions thrown by methods of this project. All exceptions declared for this project should

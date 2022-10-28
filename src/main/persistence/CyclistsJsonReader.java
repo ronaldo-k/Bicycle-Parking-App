@@ -1,4 +1,4 @@
-package persistence.parsers;
+package persistence;
 
 import model.Bicycle;
 import model.Cyclist;
@@ -7,13 +7,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.ArrayJsonReader;
 import persistence.Saveable;
+import persistence.parsers.BicycleParser;
+import persistence.parsers.TheftReportParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CyclistsJsonReader extends ArrayJsonReader {
     BicycleParser bicycleParser = new BicycleParser();
-    TheftReportParser theftReportParser;
+    TheftReportParser theftReportParser = new TheftReportParser();
 
     // EFFECTS: Builds a UserJsonReader as described in ArrayJsonReader
     public CyclistsJsonReader(String fileName) {
@@ -41,7 +43,9 @@ public class CyclistsJsonReader extends ArrayJsonReader {
         List<TheftReport> result = new ArrayList<>();
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            result.add((TheftReport) theftReportParser.parseSaveable((jsonArray.getJSONObject(i))));
+            JSONObject j = jsonArray.getJSONObject(i);
+            Saveable l = theftReportParser.parseSaveable(j);
+            result.add((TheftReport) l);
         }
         return result;
     }

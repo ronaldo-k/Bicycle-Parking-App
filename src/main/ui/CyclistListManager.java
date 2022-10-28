@@ -1,7 +1,12 @@
 package ui;
 
 import model.Cyclist;
+import persistence.ArrayJsonWriter;
+import persistence.CyclistsJsonReader;
+import persistence.Saveable;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,11 +18,51 @@ A class that maintains, alters and displays a list of cyclists.
 public class CyclistListManager {
     List<Cyclist> cyclists;
     Scanner scanner;
+    String source = "./data/cyclists.json";
 
     // EFFECTS: Creates a CyclistListManager object with no registered cyclists.
     public CyclistListManager() {
         cyclists = new ArrayList<>();
+        readCyclists();
         scanner = new Scanner(System.in);
+    }
+
+    // MODIFIES: data/cyclists.json
+    // EFFECTS:  Saves cyclists to cyclists.json
+    public void saveCyclists() {
+        ArrayJsonWriter writer = new ArrayJsonWriter(source);
+        List<Saveable> saveableCyclists = new ArrayList<>();
+
+        // I realise this is not the ideal solution but I am a bit afraid of breaking something else in the code if I
+        // change the type of cyclists to List<Saveable>.
+        for (Cyclist cyclist : cyclists) {
+            saveableCyclists.add(cyclist);
+        }
+
+        try {
+            writer.open();
+            writer.write(saveableCyclists);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("[Error - FileNotFoundException] cyclists.json file not found.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Reads cyclists from cyclists.json and inserts them into the internal cyclists list.
+    public void readCyclists() {
+        CyclistsJsonReader reader = new CyclistsJsonReader(source);
+
+        try {
+            List<Saveable> saveableCyclists = reader.read();
+
+            for (Saveable saveable : saveableCyclists) {
+                cyclists.add((Cyclist) saveable);
+            }
+        } catch (IOException e) {
+            System.out.println("[Error - IOException] An unexpected error occurred while attempting to read cyclists"
+                    + ".json.");
+        }
     }
 
     // MODIFIES: this

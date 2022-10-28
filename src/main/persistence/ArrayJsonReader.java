@@ -33,9 +33,8 @@ public abstract class ArrayJsonReader {
         return parseSaveables(jsonArray);
     }
 
-
     // EFFECTS: Parses a JSONArray into a List<Saveables>, with each Saveable being itself parsed by parseSaveable
-    public List<Saveable> parseSaveables(JSONArray jsonArray) {
+    private List<Saveable> parseSaveables(JSONArray jsonArray) {
         List<Saveable> saveables = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             saveables.add(parseSaveable(jsonArray.getJSONObject(i)));

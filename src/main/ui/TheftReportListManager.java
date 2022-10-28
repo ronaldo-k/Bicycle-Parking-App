@@ -2,8 +2,8 @@ package ui;
 
 import model.Bicycle;
 import model.Cyclist;
-import model.exceptions.NoBicyclesFoundException;
-import model.exceptions.NoParkingSpotsFoundException;
+import ui.exceptions.NoBicyclesFoundException;
+import ui.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 import model.TheftReport;
 

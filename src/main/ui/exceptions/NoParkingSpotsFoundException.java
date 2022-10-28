@@ -1,4 +1,4 @@
-package model.exceptions;
+package ui.exceptions;
 
 /*
 Exception thrown in case no parking spots that match a certain query are found.
