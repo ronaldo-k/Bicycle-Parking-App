@@ -123,10 +123,11 @@ public class ParkingSpotsJsonReaderTest {
             ParkingSpotParser parkingSpotParser = new ParkingSpotParser();
             String jsonData = readFile(source);
             JSONArray jsonArray = new JSONArray(jsonData);
-            ParkingSpot actual = (ParkingSpot) parkingSpotParser.parseSaveable(jsonArray.getJSONObject(0));
+            ParkingSpot expected = (ParkingSpot) parkingSpotParser.parseSaveable(jsonArray.getJSONObject(0));
 
-            assertEquals("To the South of the X wing of the ICICS/CS building, facing Agronomy Road. "
-                    + "Visible from the X wing first floor lounge.", actual.getDescription());
+            ParkingSpot actual = (ParkingSpot) parkingSpotsJsonReader.read().get(0) ;
+
+            assertEquals(expected.getDescription(), actual.getDescription());
         } catch (IOException e) {
             fail("Unexpected IOException thrown");
         }

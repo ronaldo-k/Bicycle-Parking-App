@@ -94,9 +94,11 @@ public class TheftReportJsonReaderTest {
             TheftReportParser theftReportParser = new TheftReportParser();
             String jsonData = readFile(source);
             JSONArray jsonArray = new JSONArray(jsonData);
-            TheftReport actual = (TheftReport) theftReportParser.parseSaveable(jsonArray.getJSONObject(0));
+            TheftReport expected = (TheftReport) theftReportParser.parseSaveable(jsonArray.getJSONObject(0));
 
-            assertEquals("Old bike", actual.getBicycle().getName());
+            TheftReport actual = (TheftReport) theftReportsJsonReader.read().get(0);
+
+            assertEquals(expected.getBicycle().getSerialNumber(), actual.getBicycle().getSerialNumber());
         } catch (IOException e) {
             fail("Unexpected IOException thrown");
         }
