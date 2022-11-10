@@ -1,9 +1,15 @@
 package ui;
 
 import model.*;
-import persistence.ArrayJsonWriter;
 import ui.exceptions.NoBicyclesFoundException;
 
+import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /*
@@ -11,7 +17,10 @@ import java.util.Scanner;
  the Main class.
  */
 
-public class BicycleParkingApp {
+public class BicycleParkingApp extends JFrame implements ActionListener {
+    public static final int WIDTH = 640;
+    public static final int HEIGHT = 480;
+
     private CyclistListManager cyclistListManager;
     private ParkingSpotListManager parkingSpotListManager;
     private BicycleListManager bicycleListManager;
@@ -19,9 +28,23 @@ public class BicycleParkingApp {
     private Cyclist currentCyclist;
     private Scanner scanner;
 
+    // GUI Components
+    // Note: The main menu buttons are displayed as a ButtonGroup and stored as a map. buttonCommands stores the
+    // action commands as received by the ActionListener (this), and buttonTitles stores the titles for each button as
+    // displayed to the user. For clarity, the key for a button is its buttonCommand + "Button". buttonCommands and
+    // buttonTitles should not be changed and must have the same length (number of elements).
+    private Map<String, JButton> buttons = new HashMap<>();
+    private static final String[] buttonCommands = {"addBicycle", "removeBicycle", "searchParkingSpots",
+            "addTheftReport",
+            "viewUserProfile", "changeUser", "quit"};
+    private static final String[] buttonTitles = {"Add Bicycle", "Remove Bicycle", "Search Parking Spots",
+            "File a Theft Report", "View User Profile", "Change User", "Quit"};
+
     // EFFECTS: Instantiates the program with an empty list of cyclists, theftReports and parking spots, adds the
     // sample set of parking spots, and creates a Scanner object.
     public BicycleParkingApp() {
+        super("Bicycle Parking");
+
         cyclistListManager = new CyclistListManager();
         parkingSpotListManager = new ParkingSpotListManager();
         scanner = new Scanner(System.in);
@@ -30,16 +53,34 @@ public class BicycleParkingApp {
             currentCyclist = cyclistListManager.selectCyclist();
             bicycleListManager = new BicycleListManager(currentCyclist);
             theftReportListManager = new TheftReportListManager(currentCyclist);
-            while (true) {
-                int menuReturnValue = cyclistMainMenu();
-                if (menuReturnValue == 6) {
-                    break; // Returns to the outer while loop (i.e. the account selection prompt).
-                } else if (menuReturnValue == 7) {
-                    saveData();
-                    System.out.println("All changes made have been saved. Quitting…");
-                    return; // Terminates the program.
-                } // Else, it returns to the main menu.
-            }
+
+            initializeGraphics();
+        }
+    }
+
+    // MODIFIES: this and buttons
+    // EFFECTS:  Initializes the graphic main menu
+    private void initializeGraphics() {
+        setLayout(new GridLayout(0,1));
+        setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        initializeMainMenu();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    // MODIFIES: this and buttons
+    // EFFECTS:  Inserts label and buttons into main menu and
+    private void initializeMainMenu() {
+        add(new JLabel("Welcome"), BorderLayout.PAGE_START);
+
+        for (int i = 0; i < buttonCommands.length; i++) {
+            JButton currentButton;
+            buttons.put(buttonCommands[i] + "Button", new JButton(buttonTitles[i]));
+
+            currentButton = buttons.get(buttonCommands[i] + "Button");
+            currentButton.addActionListener(this);
+            currentButton.setActionCommand(buttonCommands[i]);
+            add(currentButton);
         }
     }
 
@@ -50,32 +91,33 @@ public class BicycleParkingApp {
         return;
     }
 
+    // TODO: Review according to what is not implemented in the GUI.
     // MODIFIES: May modify currentCyclist, depending on the chosen option.
     // EFFECTS: Prints main menu and waits for user's input.
-    private int cyclistMainMenu() {
-        int input;
-        System.out.println("\nMAIN MENU\nPlease enter the number of one of the options below:\n"
-                + "\t[1] Add bicycle \n\t[2] Remove bicycle \n"
-                + "\t[3] Search for a parking spot \n\t[4] File theft report \n"
-                + "\t[5] View user profile, theft reports and bicycles \n"
-                + "\t[6] Change user \n\t[7] Save changes and quit");
-        input = scanner.nextInt();
-        switch (input) {
-            case 1: bicycleListManager.addBicycle();
-                break;
-            case 2: bicycleListManager.removeBicycle();
-                break;
-            case 3: parkingSpotListManager.searchParkingSpots();
-                break;
-            case 4: theftReportListManager.addTheftReport(parkingSpotListManager, bicycleListManager);
-                break;
-            case 5: viewUserProfile();
-                break;
-            default:
-                return input;
-        }
-        return 0;
-    }
+//    private int cyclistMainMenu() {
+//        int input;
+//        System.out.println("\nMAIN MENU\nPlease enter the number of one of the options below:\n"
+//                + "\t[1] Add bicycle \n\t[2] Remove bicycle \n"
+//                + "\t[3] Search for a parking spot \n\t[4] File theft report \n"
+//                + "\t[5] View user profile, theft reports and bicycles \n"
+//                + "\t[6] Change user \n\t[7] Save changes and quit");
+//        input = scanner.nextInt();
+//        switch (input) {
+//            case 1: bicycleListManager.addBicycle();
+//                break;
+//            case 2: bicycleListManager.removeBicycle();
+//                break;
+//            case 3: parkingSpotListManager.searchParkingSpots();
+//                break;
+//            case 4: theftReportListManager.addTheftReport(parkingSpotListManager, bicycleListManager);
+//                break;
+//            case 5: viewUserProfile();
+//                break;
+//            default:
+//                return input;
+//        }
+//        return 0;
+//    }
 
     // EFFECTS: Prints out the currentCyclist's bicycles and filed theft reports.
     private void viewUserProfile() {
@@ -89,4 +131,31 @@ public class BicycleParkingApp {
         theftReportListManager.viewTheftReports();
     }
 
+    private void saveAndQuitPrompt() {
+        String[] options = {"Save", "Do Not Save", "Cancel"};
+
+        JOptionPane.showOptionDialog(this,
+                "please choose one", "Save ",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command.equals("addBicycle")) {
+            bicycleListManager.addBicycle();
+        } else if (command.equals("removeBicycle")) {
+            bicycleListManager.removeBicycle();
+        } else if (command.equals("searchParkingSpots")) {
+            parkingSpotListManager.initializeSearchParkingSpotsWindow();
+        } else if (command.equals("addTheftReport")) {
+            theftReportListManager.addTheftReport(parkingSpotListManager, bicycleListManager);
+        } else if (command.equals("viewUserProfile")) {
+            viewUserProfile();
+        } else if (command.equals("changeUser")) {
+            return;
+        } else if (command.equals("quit")) {
+            saveAndQuitPrompt(); // something else
+        }
+    }
 }

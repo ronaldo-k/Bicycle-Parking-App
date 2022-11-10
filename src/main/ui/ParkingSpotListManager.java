@@ -8,6 +8,11 @@ import persistence.Saveable;
 import ui.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -15,51 +20,36 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static java.awt.event.KeyEvent.*;
+
 /*
 A class that maintains and displays a list of parking spots.
  */
 
-public class ParkingSpotListManager {
+public class ParkingSpotListManager implements ActionListener {
     private List<ParkingSpot> parkingSpots;
     Scanner scanner;
     String source = "./data/parkingSpots.json";
 
-    // The following is a sample set of parking spots and their addresses
-    Address computerScienceAddress = new Address("2366", "Main Mall", "Vancouver", "V6T1Z4");
-    Address forestSciencesAddress = new Address("2424", "Main Mall", "Vancouver", "V6T1Z4");
-    Address hughDempsterAddress = new Address("6245", "Agronomy Road", "Vancouver", "V6T1Z4");
-    Address thunderbirdResidenceSelkirkAddress = new Address("6335", "Thunderbird Crescent", "Vancouver", "V6T2G9");
-    Address osborneCentreUnit1Address = new Address("6108", "Thunderbird Boulevard", "Vancouver", "V6T2A1");
-    Address thunderbirdParkadeAddress = new Address("6085", "Thunderbird Boulevard", "Vancouver", "V6T1Z3");
-
-    ParkingSpot computerScienceXWingRack = new ParkingSpot(computerScienceAddress, "Rack", 14, 0, 0,
-            false, false, true, "To the South of the X wing of the ICICS/CS building, facing Agronomy Road. "
-            + "Visible from the X wing first floor lounge.");
-    ParkingSpot forestSciencesRack = new ParkingSpot(forestSciencesAddress, "Rack", 30, 0, 0,
-            true, false, true, "To the West of the Forest Sciences building, facing Main Mall.");
-    ParkingSpot hughDempsterRack = new ParkingSpot(hughDempsterAddress, "Rack", 12, 0, 0,
-            true, false, true, "To the West of the Forest Sciences building, facing Engineering Road.");
-    ParkingSpot thunderbirdResidenceSelkirkRack = new ParkingSpot(thunderbirdResidenceSelkirkAddress, "Rack", 7,
-            0, 0, false, false, true, "To the East of the Selkirk block of the Thunderbird Student Residence, "
-            + "facing Thunderbird Crescent");
-    ParkingSpot osborneCentreUnit1Rack = new ParkingSpot(osborneCentreUnit1Address, "Rack", 32,
-            0, 0, false, false, true, "To the East of Unit 1 of the Robert F. Osborne Centre, facing a parking "
-            + "lot.");
-    ParkingSpot thunderbirdParkadeCage = new ParkingSpot(thunderbirdParkadeAddress, "Parkade", 40,
-            0, 0, true, true, true, "At the Northwest corner of Thunderbird Parkade. Access to this bicycle cage "
-            + "is restricted to students, faculty, staff and affiliated members of the University of British "
-            + "Columbia (UBC) only. These may obtain a bicycle cage permit in the UBC parking website with a "
-            + "UBCcard.");
+    // GUI dialog and related components
+    JDialog dialog;
+    JPanel panel; // Dialog's main panel
+    JPanel inputPanel; // Panel that contains the following two fields and a button.
+    JTextField entry;
+    JLabel entryLabel;
+    JButton searchButton;
+    JPanel listPanel; // Panel that contains the following JList
+    JList queryList;
+    JPanel optionPanel; // Panel that contains the following two buttons
+    JButton moreInformationButton;
+    JButton proceedButton;
 
     // EFFECTS: Creates an instance of ParkingSpotListManager with the sample set of parking spots.
     public ParkingSpotListManager() {
         parkingSpots = new ArrayList<>();
         scanner = new Scanner(System.in);
-        // Note: Uncomment the two following lines only if parkingSpots.json has not yet been generated. Remember to
-        // comment them back once parkingSpots.json is generated otherwise they will generate duplicate parkingSpots.
-//        addSampleParkingSpots();
-//        saveParkingSpots();
         readParkingSpots();
+        constructGUI();
     }
 
     // MODIFIES: this
@@ -98,29 +88,72 @@ public class ParkingSpotListManager {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS:  Adds sample set of parkingSpots to parkingSpotMap
-    private void addSampleParkingSpots() {
-        parkingSpots.add(computerScienceXWingRack);
-        parkingSpots.add(forestSciencesRack);
-        parkingSpots.add(hughDempsterRack);
-        parkingSpots.add(thunderbirdResidenceSelkirkRack);
-        parkingSpots.add(osborneCentreUnit1Rack);
-        parkingSpots.add(thunderbirdParkadeCage);
+    // MODIFIES: All swing objects in this class
+    // EFFECTS:  Instantiates all swing objects and adds
+    private void constructGUI() {
+        dialog = new JDialog();
+        dialog.setMinimumSize(new Dimension(640, 480));
+        panel = new JPanel(new BorderLayout());
+
+        constructInputPanel();
+        constructListPanel();
+        constructOptionPanel();
+
+        panel.setVisible(true);
+        dialog.add(panel);
     }
 
-    // EFFECTS: Outputs a list of parking spots according to the user's input postal code.
-    public void searchParkingSpots() {
-        String inputPostalCode;
+    // MODIFIES: inputPanel, entryLabel, entry and panel
+    // EFFECTS:  Instantiates and adds all elements of the first (input) row of the GUI to panel.
+    private void constructInputPanel() {
+        inputPanel = new JPanel(new FlowLayout());
+        entryLabel = new JLabel("Postal code:");
+        entry = new JTextField(12);
 
-        System.out.printf("\nSEARCH FOR A PARKING SPOT\n\tWhat postal code would you like to search? ");
-        inputPostalCode = scanner.nextLine();
-        try {
-            viewParkingSpots(inputPostalCode);
-        } catch (NoParkingSpotsFoundException e) {
-            // In this function, if NoParkingSpotsFoundException is caught no specific action is taken.
-            // The catch statement here is only intended to keep the program from crashing.
-        }
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(this);
+        searchButton.setActionCommand("search");
+
+        inputPanel.add(entryLabel);
+        inputPanel.add(entry);
+        inputPanel.add(searchButton);
+
+        inputPanel.setVisible(true);
+        panel.add(inputPanel, BorderLayout.PAGE_START);
+    }
+
+    // MODIFIES: listPanel, queryList and panel
+    // EFFECTS:  Instantiates and adds all elements of the second (list) row of the GUI to panel.
+    private void constructListPanel() {
+        listPanel = new JPanel(new BorderLayout());
+        queryList = new JList<>();
+        queryList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        queryList.setLayoutOrientation(JList.VERTICAL);
+
+        listPanel.add(queryList);
+
+        listPanel.setVisible(true);
+        panel.add(listPanel, BorderLayout.CENTER);
+    }
+
+    // MODIFIES: optionPanel, moreInformationButton, proceedButton and panel
+    // EFFECTS:  Instantiates and adds all elements of the third (options) row of the GUI to panel.
+    private void constructOptionPanel() {
+        optionPanel = new JPanel(new GridLayout(1,2));
+        moreInformationButton = new JButton("More Information");
+        proceedButton = new JButton("Cancel");
+
+        optionPanel.add(moreInformationButton);
+        optionPanel.add(proceedButton);
+        optionPanel.setVisible(true);
+        panel.add(optionPanel, BorderLayout.PAGE_END);
+    }
+
+    // EFFECTS: Creates and displays a panel that shows a list of parking spots according to the user's input postal
+    // code.
+    public void initializeSearchParkingSpotsWindow() {
+        String[] defaultParkingSpotsList = {"Please input a postal code in the field above."};
+        dialog.setVisible(true);
     }
 
     // EFFECTS: Prints out a list of bicycle parking spots available in the provided inputPostalCode.
@@ -133,7 +166,6 @@ public class ParkingSpotListManager {
             }
         }
         if (searchResults.size() == 0) {
-            System.out.printf("No parking spots with this postal code were found.\n");
             throw new NoParkingSpotsFoundException();
         }
 
@@ -143,5 +175,29 @@ public class ParkingSpotListManager {
             System.out.printf("\t[%d] %s\n", i + 1, searchResults.get(i).getFormattedDescription("\t"));
         }
         return searchResults;
+    }
+
+    private void generateMoreInformationDialog() {
+        JDialog moreInformationDialog = new JDialog();
+        JPanel moreInformationPanel = new JPanel(new FlowLayout());
+        JLabel moreInformationText = new JLabel();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        List<ParkingSpot> searchResults = new ArrayList<>();
+        List<String> formattedSearchResults = new ArrayList<>();
+
+        if (e.getActionCommand().equals("search")) {
+            try {
+                searchResults = viewParkingSpots(entry.getText());
+                for (ParkingSpot parkingSpot : searchResults) {
+                    formattedSearchResults.add(parkingSpot.getAddress().getFormattedAddress());
+                }
+            } catch (NoParkingSpotsFoundException exception) {
+                formattedSearchResults.add("No parking spots with this postal code were found.");
+            }
+            queryList.setListData(formattedSearchResults.toArray());
+        }
     }
 }

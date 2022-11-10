@@ -7,6 +7,8 @@ import ui.exceptions.NoParkingSpotsFoundException;
 import model.ParkingSpot;
 import model.TheftReport;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,12 +75,14 @@ public class TheftReportListManager {
         System.out.println("< Your theft report has been filed. > You may view it by entering [5] in the main menu.");
     }
 
+    // TODO: DOCUMENTATION FOR THIS METHOD
     private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) throws NoBicyclesFoundException {
         bicycleListManager.viewBicycles();
         System.out.println("Which bicycle has been stolen? ");
         return cyclist.getBicycles().get(scanner.nextInt() - 1);
     }
 
+    // TODO: DOCUMENTATION FOR THIS METHOD
     private ParkingSpot getParkingSpotForTheftReport(ParkingSpotListManager parkingSpotListManager)
             throws NoParkingSpotsFoundException {
         List<ParkingSpot> parkingSpotSearchResults;
