@@ -30,6 +30,7 @@ public class ParkingSpotParser extends SaveableParser {
         Boolean requiresLock = jsonObject.getBoolean("requiresLock");
         String description = jsonObject.getString("description");
         int theftReportNumber = jsonObject.getInt("theftReportNumber");
+
         ParkingSpot parkingSpot = new ParkingSpot(address, type, capacity, price, period, isCovered,
                 isRestrictedAccess, requiresLock, description, theftReportNumber);
         return parkingSpot;

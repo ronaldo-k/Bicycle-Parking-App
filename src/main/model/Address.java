@@ -28,6 +28,11 @@ public class Address implements Saveable {
         return buildingNumber + " " + streetName + ", " + city + ", " + postalCode;
     }
 
+    // EFFECTS: Returns string containing the address with no whitespace characters for use in ParkingSpot.getUniqueId()
+    public String getAddressForUniqueID() {
+        return buildingNumber + streetName + city + postalCode;
+    }
+
     public String getBuildingNumber() {
         return buildingNumber;
     }

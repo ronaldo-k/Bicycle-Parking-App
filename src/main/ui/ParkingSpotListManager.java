@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.awt.event.KeyEvent.*;
@@ -30,6 +31,7 @@ public class ParkingSpotListManager implements ActionListener {
     private List<ParkingSpot> parkingSpots;
     Scanner scanner;
     String source = "./data/parkingSpots.json";
+    String imagesFolder = "./data/images/";
 
     // GUI dialog and related components
     JDialog dialog;
@@ -43,6 +45,8 @@ public class ParkingSpotListManager implements ActionListener {
     JPanel optionPanel; // Panel that contains the following two buttons
     JButton moreInformationButton;
     JButton proceedButton;
+    List<ParkingSpot> searchResults; // Stores user query's search results
+
 
     // EFFECTS: Creates an instance of ParkingSpotListManager with the sample set of parking spots.
     public ParkingSpotListManager() {
@@ -92,7 +96,7 @@ public class ParkingSpotListManager implements ActionListener {
     // EFFECTS:  Instantiates all swing objects and adds
     private void constructGUI() {
         dialog = new JDialog();
-        dialog.setMinimumSize(new Dimension(640, 480));
+        dialog.setMinimumSize(new Dimension(640, 440));
         panel = new JPanel(new BorderLayout());
 
         constructInputPanel();
@@ -143,22 +147,52 @@ public class ParkingSpotListManager implements ActionListener {
         moreInformationButton = new JButton("More Information");
         proceedButton = new JButton("Cancel");
 
+        moreInformationButton.addActionListener(this);
+        proceedButton.addActionListener(this);
+        moreInformationButton.setActionCommand("moreInformation");
+        proceedButton.setActionCommand("proceed");
+
         optionPanel.add(moreInformationButton);
         optionPanel.add(proceedButton);
         optionPanel.setVisible(true);
         panel.add(optionPanel, BorderLayout.PAGE_END);
     }
 
-    // EFFECTS: Creates and displays a panel that shows a list of parking spots according to the user's input postal
-    // code.
+    // MODIFIES: dialog
+    // EFFECTS:  Displays a panel that shows a list of parking spots according to the user's input postal code.
     public void initializeSearchParkingSpotsWindow() {
-        String[] defaultParkingSpotsList = {"Please input a postal code in the field above."};
         dialog.setVisible(true);
+    }
+
+    private void generateMoreInformationDialog(int index) {
+        JDialog moreInformationDialog = new JDialog();
+        moreInformationDialog.setSize(new Dimension(640, 560));
+
+        JPanel moreInformationPanel = new JPanel(new FlowLayout());
+
+        JTextArea moreInformationText = new JTextArea(14, 48);
+        moreInformationText.setEditable(false);
+        String text =
+                searchResults.get(index).getFormattedDescription("") + "\n" + searchResults.get(index).getUniqueID();
+
+        ImageIcon image = new ImageIcon(imagesFolder + searchResults.get(index).getUniqueID() + ".jpg");
+        JLabel moreInformationPicture = new JLabel(image);
+
+        moreInformationText.setLineWrap(true);
+        moreInformationText.setWrapStyleWord(true);
+        moreInformationText.setText(text);
+
+        moreInformationPanel.add(moreInformationPicture);
+        moreInformationPanel.add(moreInformationText);
+        moreInformationPanel.setVisible(true);
+
+        moreInformationDialog.add(moreInformationPanel);
+        moreInformationDialog.setVisible(true);
     }
 
     // EFFECTS: Prints out a list of bicycle parking spots available in the provided inputPostalCode.
     public List<ParkingSpot> viewParkingSpots(String inputPostalCode) throws NoParkingSpotsFoundException {
-        List<ParkingSpot> searchResults = new ArrayList<>();
+        searchResults = new ArrayList<>();
 
         for (ParkingSpot parkingSpot : parkingSpots) {
             if (inputPostalCode.equalsIgnoreCase(parkingSpot.getAddress().getPostalCode())) {
@@ -169,23 +203,18 @@ public class ParkingSpotListManager implements ActionListener {
             throw new NoParkingSpotsFoundException();
         }
 
-        System.out.println("The following parking spots with the postal code " + inputPostalCode
-                + " have been found:");
-        for (int i = 0; i < searchResults.size(); i++) {
-            System.out.printf("\t[%d] %s\n", i + 1, searchResults.get(i).getFormattedDescription("\t"));
-        }
+        // The code below is related to terminal-based displaying of parking spots. It has been commented out for the
+        // Parking Spots GUI implementation.
+//        System.out.println("The following parking spots with the postal code " + inputPostalCode
+//                + " have been found:");
+//        for (int i = 0; i < searchResults.size(); i++) {
+//            System.out.printf("\t[%d] %s\n", i + 1, searchResults.get(i).getFormattedDescription("\t"));
+//        }
         return searchResults;
-    }
-
-    private void generateMoreInformationDialog() {
-        JDialog moreInformationDialog = new JDialog();
-        JPanel moreInformationPanel = new JPanel(new FlowLayout());
-        JLabel moreInformationText = new JLabel();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        List<ParkingSpot> searchResults = new ArrayList<>();
         List<String> formattedSearchResults = new ArrayList<>();
 
         if (e.getActionCommand().equals("search")) {
@@ -198,6 +227,8 @@ public class ParkingSpotListManager implements ActionListener {
                 formattedSearchResults.add("No parking spots with this postal code were found.");
             }
             queryList.setListData(formattedSearchResults.toArray());
+        } else if (e.getActionCommand().equals("moreInformation")) {
+            generateMoreInformationDialog(queryList.getSelectedIndex());
         }
     }
 }

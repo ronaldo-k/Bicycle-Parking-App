@@ -4,7 +4,8 @@ package model;
 This class represents bicycle parking spots, which carry an address, a type, a capacity, a price per period (as two
 separate values), and a description with special boolean variables for three basic attributes: whether the parking
 spot is sheltered, whether its access is restricted and whether it requires the use of a lock. While the address does
-not need to be unique, there should not be two different ParkingSpot objects with all variables matching.
+not need to be unique, there should not be two different ParkingSpot objects with the same address, type, capacity,
+price, period, isCovered, isRestrictedAccess and requiresLock.
  */
 
 import org.json.JSONObject;
@@ -101,10 +102,10 @@ public class ParkingSpot implements PointOfInterest, Saveable {
     }
 
     // EFFECTS: Returns a formatted description of the parkingSpot.
-    public String getFormattedDescription(String pretab) {
-        /* This description is formatted as follows:
-        (Address)
+    /* This description is formatted as follows:
+        (ADDRESS)
          - Type: (Type)
+         - Capacity: (Capacity)
          - Price: $(Price)/Period
          - Is it covered? (True or False)
          - Is its access restricted? (True or False)
@@ -113,15 +114,34 @@ public class ParkingSpot implements PointOfInterest, Saveable {
          - Details: (Description)
          Note: pretab is a sequence of tab (i.e. \t) characters placed before each new line.
          */
-        return this.address.getFormattedAddress().toUpperCase() + "\n"
-                + pretab + "\tType: " + this.type + "\n"
-                + pretab + "\tCapacity: " + this.capacity + "\n"
-                + pretab + "\tPrice: $" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h\n"
-                + pretab + "\tIs it covered? " + this.isCovered + "\n"
-                + pretab + "\tIs its access restricted? " + this.isRestrictedAccess + "\n"
-                + pretab + "\tDoes it require a lock? " + this.requiresLock + "\n"
-                + pretab + "\tNumber of theft reports registered: " + this.theftReportNumber + "\n"
-                + pretab + "\tDetails: " + this.description;
+    public String getFormattedDescription(String pretab) {
+        String pricePeriodString = "$" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h\n";
+        if (price == 0 && period == 0) {
+            pricePeriodString = "Free";
+        }
+
+        return this.address.getFormattedAddress().toUpperCase() + "\n\n"
+                + pretab + "Type: " + this.type + "\n"
+                + pretab + "Capacity: " + this.capacity + "\n"
+                + pretab + "Price: " + pricePeriodString + "\n"
+                + pretab + "Is it covered? " + (this.isCovered ? "Yes" : "No") + "\n"
+                + pretab + "Is its access restricted? " + (this.isRestrictedAccess ? "Yes" : "No") + "\n"
+                + pretab + "Does it require a lock? " + (this.requiresLock ? "Yes" : "No") + "\n"
+                + pretab + "Number of theft reports registered: " + this.theftReportNumber + "\n"
+                + pretab + "Details: " + this.description;
+    }
+
+
+    // EFFECTS: Returns unique ID for the parking spot (containing, in the following order but without whitespace
+    // characters, address, type, capacity, price, period, isCovered, isAccessRestricted, requiresLock.
+    public String getUniqueID() {
+        int intIsCovered = isCovered ? 1 : 0;
+        int intIsRestrictedAccess = isRestrictedAccess ? 1 : 0;
+        int intRequiresLock = requiresLock ? 1 : 0;
+        String result = address.getAddressForUniqueID() + type + capacity + price + period
+                + intIsCovered + intIsRestrictedAccess + intRequiresLock;
+        result = result.replaceAll("\\s", "");
+        return result;
     }
 
     public boolean isCovered() {
@@ -136,14 +156,9 @@ public class ParkingSpot implements PointOfInterest, Saveable {
         return requiresLock;
     }
 
-//    public void setAddress(Address address) {
-//        this.address = address;
-//    }
-
     public void incrementTheftReportNumber() {
         theftReportNumber++;
     }
-
 
     // EFFECTS: Returns the JSON formatted version of a ParkingSpot
     @Override

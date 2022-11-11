@@ -71,7 +71,9 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     // MODIFIES: this and buttons
     // EFFECTS:  Inserts label and buttons into main menu and
     private void initializeMainMenu() {
-        add(new JLabel("Welcome"), BorderLayout.PAGE_START);
+        JLabel welcomeLabel = new JLabel("Hello, " + currentCyclist.getName() + "!");
+        welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(welcomeLabel, BorderLayout.PAGE_START);
 
         for (int i = 0; i < buttonCommands.length; i++) {
             JButton currentButton;
@@ -134,9 +136,21 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     private void saveAndQuitPrompt() {
         String[] options = {"Save", "Do Not Save", "Cancel"};
 
-        JOptionPane.showOptionDialog(this,
-                "please choose one", "Save ",
+        int result = JOptionPane.showOptionDialog(this,
+                "Would you like to save your changes?", "Save and Quit",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        switch (result) {
+            case 0: // "Save"
+                saveData();
+                System.exit(0);
+                break;
+            case 1: // "Do Not Save"
+                System.exit(0);
+                break;
+            default: // "Cancel"
+                break;
+        }
     }
 
     @Override
