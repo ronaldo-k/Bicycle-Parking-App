@@ -49,13 +49,11 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         parkingSpotListManager = new ParkingSpotListManager();
         scanner = new Scanner(System.in);
 
-        while (true) {
-            currentCyclist = cyclistListManager.selectCyclist();
-            bicycleListManager = new BicycleListManager(currentCyclist);
-            theftReportListManager = new TheftReportListManager(currentCyclist);
+        currentCyclist = cyclistListManager.selectCyclist();
+        bicycleListManager = new BicycleListManager(currentCyclist);
+        theftReportListManager = new TheftReportListManager(currentCyclist);
 
-            initializeGraphics();
-        }
+        initializeGraphics();
     }
 
     // MODIFIES: this and buttons
@@ -161,7 +159,7 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         } else if (command.equals("removeBicycle")) {
             bicycleListManager.removeBicycle();
         } else if (command.equals("searchParkingSpots")) {
-            parkingSpotListManager.initializeSearchParkingSpotsWindow();
+            parkingSpotListManager.initializeSearchParkingSpotsWindow("", "Cancel");
         } else if (command.equals("addTheftReport")) {
             theftReportListManager.addTheftReport(parkingSpotListManager, bicycleListManager);
         } else if (command.equals("viewUserProfile")) {

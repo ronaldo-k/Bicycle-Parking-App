@@ -18,6 +18,10 @@ public class TheftReportListManager {
     List<TheftReport> theftReports;
     Cyclist cyclist;
     Scanner scanner;
+    ParkingSpot outputFromParkingSpotDialog;
+
+    ParkingSpotListManager parkingSpotListManager;
+    BicycleListManager bicycleListManager;
 
     // EFFECTS: Creates a TheftReportListManager object for the passed cyclist with no registered theft reports.
     public TheftReportListManager(Cyclist cyclist) {
@@ -31,7 +35,7 @@ public class TheftReportListManager {
         int day;
         int month;
         int year;
-
+        System.out.printf("When was your bicycle stolen?");
         System.out.printf("\n(Please input the following information as numbers only)"
                 + "\n\tDay: ");
         day = scanner.nextInt();
@@ -49,23 +53,16 @@ public class TheftReportListManager {
     public void addTheftReport(ParkingSpotListManager parkingSpotListManager, BicycleListManager bicycleListManager) {
         Bicycle bicycle;
         LocalDate date;
-        ParkingSpot parkingSpot;
+        ParkingSpot parkingSpot = null;
+        this.parkingSpotListManager = parkingSpotListManager;
+        this.bicycleListManager = bicycleListManager;
 
         System.out.printf("\nFILE A THEFT REPORT\n");
-        try {
-            bicycle = getBicycleForTheftReport(bicycleListManager);
-        } catch (NoBicyclesFoundException e) {
-            System.out.println("No registered bicycles found. Please register a bicycle before filing a theft report.");
+        bicycle = getBicycleForTheftReport(bicycleListManager);
+        if (bicycle == null) { // TODO: REMOVE THIS IF STATEMENT ONCE BICYCLE GUI IS IMPLEMENTED
             return;
         }
-
-        try {
-            parkingSpot = getParkingSpotForTheftReport(parkingSpotListManager);
-        } catch (NoParkingSpotsFoundException e) {
-            return;
-        }
-
-        System.out.printf("When was your bicycle stolen?");
+        parkingSpot = getParkingSpotForTheftReport(parkingSpotListManager);
         date = getDateFromUser();
 
         TheftReport theftReport = new TheftReport(bicycle, parkingSpot, date);
@@ -76,22 +73,22 @@ public class TheftReportListManager {
     }
 
     // TODO: DOCUMENTATION FOR THIS METHOD
-    private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) throws NoBicyclesFoundException {
-        bicycleListManager.viewBicycles();
-        System.out.println("Which bicycle has been stolen? ");
-        return cyclist.getBicycles().get(scanner.nextInt() - 1);
+    private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) {
+        try {
+            bicycleListManager.viewBicycles();
+            System.out.println("Which bicycle has been stolen? ");
+            return cyclist.getBicycles().get(scanner.nextInt() - 1);
+        } catch (NoBicyclesFoundException e) {
+            System.out.println("No registered bicycles found. Please register a bicycle before filing a theft report.");
+            return null;
+        }
     }
 
     // TODO: DOCUMENTATION FOR THIS METHOD
-    private ParkingSpot getParkingSpotForTheftReport(ParkingSpotListManager parkingSpotListManager)
-            throws NoParkingSpotsFoundException {
-        List<ParkingSpot> parkingSpotSearchResults;
-        System.out.println("Please input the postal code of the parking spot from which your bicycle was stolen: ");
-        scanner.nextLine(); // Workaround to prevent skipping of the subsequent nextLine command.
-
-        parkingSpotSearchResults = parkingSpotListManager.viewParkingSpots(scanner.nextLine());
-        System.out.println("From which of these parking spots has your bicycle been stolen?");
-        return parkingSpotSearchResults.get(scanner.nextInt() - 1);
+    private ParkingSpot getParkingSpotForTheftReport(ParkingSpotListManager parkingSpotListManager) {
+        parkingSpotListManager.initializeSearchParkingSpotsWindow("Please input the postal code of the"
+                + "parking spot from which your bicycle was stolen", "Confirm");
+        return parkingSpotListManager.getOutput();
     }
 
     // EFFECTS: Prints out a list of theft reports filed by the currentCyclist.

@@ -14,6 +14,7 @@ public class BicycleListManager {
     Cyclist cyclist;
     Scanner scanner;
 
+
     // EFFECTS: Creates a BicycleListManager that maintains cyclist's list of bicycles.
     public BicycleListManager(Cyclist cyclist) {
         this.cyclist = cyclist;
@@ -46,6 +47,8 @@ public class BicycleListManager {
 
         return bicycle;
     }
+
+
 
     // MODIFIES: cyclist
     // EFFECTS:  Creates new bicycle according to the user's input and adds it to the currentCyclist's list of bicycles.
