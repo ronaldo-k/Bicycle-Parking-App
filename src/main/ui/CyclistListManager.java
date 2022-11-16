@@ -23,9 +23,11 @@ public class CyclistListManager {
     String source = "./data/cyclists.json";
 
     // EFFECTS: Creates a CyclistListManager object with no registered cyclists.
-    public CyclistListManager() {
+    public CyclistListManager(Boolean loadSavedData) {
         cyclists = new ArrayList<>();
-        readCyclists();
+        if (loadSavedData) {
+            readCyclists();
+        }
         scanner = new Scanner(System.in);
     }
 
@@ -123,4 +125,5 @@ public class CyclistListManager {
             System.out.printf("\t[%d] %s\n", i + 1, cyclists.get(i).getName());
         }
     }
+
 }

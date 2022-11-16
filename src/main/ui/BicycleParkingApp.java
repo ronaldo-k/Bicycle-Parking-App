@@ -45,15 +45,33 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     public BicycleParkingApp() {
         super("Bicycle Parking");
 
-        cyclistListManager = new CyclistListManager();
+        Boolean loadSavedData = loadSavedDataPrompt();
+
+        cyclistListManager = new CyclistListManager(loadSavedData);
         parkingSpotListManager = new ParkingSpotListManager();
         scanner = new Scanner(System.in);
 
         currentCyclist = cyclistListManager.selectCyclist();
+
         bicycleListManager = new BicycleListManager(currentCyclist);
         theftReportListManager = new TheftReportListManager(currentCyclist);
 
         initializeGraphics();
+    }
+
+    // EFFECTS: Shows dialog to ask whether the user wants to load their saved data. Returns true if the saved data
+    // should be loaded, false otherwise.
+    private Boolean loadSavedDataPrompt() {
+        String[] options = {"Load", "Do Not Load"};
+
+        int result = JOptionPane.showOptionDialog(this,
+                "Would you like to load your saved data?", "Load saved data",
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        switch (result) {
+            case 0: return true;
+            default: return false;
+        }
     }
 
     // MODIFIES: this and buttons
@@ -165,7 +183,7 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         } else if (command.equals("viewUserProfile")) {
             viewUserProfile();
         } else if (command.equals("changeUser")) {
-            return;
+            cyclistListManager.selectCyclist();
         } else if (command.equals("quit")) {
             saveAndQuitPrompt(); // something else
         }

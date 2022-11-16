@@ -98,4 +98,8 @@ public class TheftReportListManager {
             System.out.printf("\t[%d] %s\n", i + 1, cyclist.getTheftReports().get(i).getFormattedDescription());
         }
     }
+
+    public void setCyclist(Cyclist cyclist) {
+        this.cyclist = cyclist;
+    }
 }
