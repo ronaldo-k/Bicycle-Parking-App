@@ -34,10 +34,10 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     // displayed to the user. For clarity, the key for a button is its buttonCommand + "Button". buttonCommands and
     // buttonTitles should not be changed and must have the same length (number of elements).
     private Map<String, JButton> buttons = new HashMap<>();
-    private static final String[] buttonCommands = {"addBicycle", "removeBicycle", "searchParkingSpots",
+    private static final String[] buttonCommands = {"viewBicycles", "searchParkingSpots",
             "addTheftReport",
             "viewUserProfile", "changeUser", "quit"};
-    private static final String[] buttonTitles = {"Add Bicycle", "Remove Bicycle", "Search Parking Spots",
+    private static final String[] buttonTitles = {"View And Edit Bicycles", "Search Parking Spots",
             "File a Theft Report", "View User Profile", "Change User", "Quit"};
 
     // EFFECTS: Instantiates the program with an empty list of cyclists, theftReports and parking spots, adds the
@@ -140,11 +140,8 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     // EFFECTS: Prints out the currentCyclist's bicycles and filed theft reports.
     private void viewUserProfile() {
         System.out.println("Your name is: " + currentCyclist.getName());
-        try {
-            bicycleListManager.viewBicycles();
-        } catch (NoBicyclesFoundException e) {
-            System.out.println("You currently have no registered bicycles.");
-        }
+        System.out.println("TODO view user's bicycles");
+        //bicycleListManager.viewBicycles("");
         System.out.printf("\n");
         theftReportListManager.viewTheftReports();
     }
@@ -172,10 +169,8 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command.equals("addBicycle")) {
-            bicycleListManager.addBicycle();
-        } else if (command.equals("removeBicycle")) {
-            bicycleListManager.removeBicycle();
+        if (command.equals("viewBicycles")) {
+            bicycleListManager.initializeViewBicyclesWindow("", "Cancel");
         } else if (command.equals("searchParkingSpots")) {
             parkingSpotListManager.initializeSearchParkingSpotsWindow("", "Cancel");
         } else if (command.equals("addTheftReport")) {

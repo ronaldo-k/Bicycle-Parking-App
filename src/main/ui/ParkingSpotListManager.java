@@ -192,8 +192,9 @@ public class ParkingSpotListManager implements ActionListener {
         moreInformationDialog.setVisible(true);
     }
 
-    // EFFECTS: Prints out a list of bicycle parking spots available in the provided inputPostalCode.
-    public List<ParkingSpot> viewParkingSpots(String inputPostalCode, Boolean useGUI)
+    // MODIFIES: searchResults
+    // EFFECTS:  Adds all parkingSpots whose postal code matches inputPostalCode to searchResults
+    public List<ParkingSpot> viewParkingSpots(String inputPostalCode)
             throws NoParkingSpotsFoundException {
         searchResults = new ArrayList<>();
 
@@ -219,25 +220,34 @@ public class ParkingSpotListManager implements ActionListener {
         return searchResults;
     }
 
+    // MODIFIES: dialog and output
+    // EFFECTS:  Hides dialog and sets output to the selected parking spot.
     public void setOutputParkingSpotByIndexAndHide(int index) {
         dialog.setVisible(false);
         output = searchResults.get(index);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    // MODIFIES: searchResults and queryList.
+    // EFFECTS:  Sets search results according to entry's postal code and adds search results to queryList.
+    private void setSearchResultsAndQueryList() {
         List<String> formattedSearchResults = new ArrayList<>();
 
-        if (e.getActionCommand().equals("search")) {
-            try {
-                searchResults = viewParkingSpots(entry.getText(), true);
-                for (ParkingSpot parkingSpot : searchResults) {
-                    formattedSearchResults.add(parkingSpot.getAddress().getFormattedAddress());
-                }
-            } catch (NoParkingSpotsFoundException exception) {
-                formattedSearchResults.add("No parking spots with this postal code were found.");
+        try {
+            searchResults = viewParkingSpots(entry.getText());
+            for (ParkingSpot parkingSpot : searchResults) {
+                formattedSearchResults.add(parkingSpot.getAddress().getFormattedAddress());
             }
-            queryList.setListData(formattedSearchResults.toArray());
+        } catch (NoParkingSpotsFoundException exception) {
+            formattedSearchResults.add("No parking spots with this postal code were found.");
+        }
+
+        queryList.setListData(formattedSearchResults.toArray());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("search")) {
+            setSearchResultsAndQueryList();
         } else if (e.getActionCommand().equals("moreInformation")) {
             generateMoreInformationDialog(queryList.getSelectedIndex());
         } else if (e.getActionCommand().equals("proceed")) {

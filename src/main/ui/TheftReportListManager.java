@@ -74,14 +74,8 @@ public class TheftReportListManager {
 
     // TODO: DOCUMENTATION FOR THIS METHOD
     private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) {
-        try {
-            bicycleListManager.viewBicycles();
-            System.out.println("Which bicycle has been stolen? ");
-            return cyclist.getBicycles().get(scanner.nextInt() - 1);
-        } catch (NoBicyclesFoundException e) {
-            System.out.println("No registered bicycles found. Please register a bicycle before filing a theft report.");
-            return null;
-        }
+        bicycleListManager.initializeViewBicyclesWindow("Please select which bicycle was stolen", "Confirm");
+        return bicycleListManager.getOutput();
     }
 
     // TODO: DOCUMENTATION FOR THIS METHOD
