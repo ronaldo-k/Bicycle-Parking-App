@@ -27,6 +27,12 @@ public class Bicycle implements Saveable {
         this.serialNumber = serialNumber;
     }
 
+    // REQUIRES: serialNumber must be set afterwards with bicycle.setSerialNumber.
+    // EFFECTS:  Creates a bicycle with all fields empty.
+    public Bicycle() {
+        new Bicycle("", "", "", "", "");
+    }
+
     // EFFECTS: Returns a formatted description of the bicycle.
     public String getFormattedDescription(String pretab) {
         /* This description is formatted as follows:
@@ -62,6 +68,26 @@ public class Bicycle implements Saveable {
 
     public String getSerialNumber() {
         return serialNumber;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     // EFFECTS: Returns the JSONArray formatted version of a bicycle.

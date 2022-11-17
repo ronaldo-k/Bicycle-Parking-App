@@ -6,11 +6,12 @@ A class that maintains, alters and displays a list of bicycles registered by cyc
 
 import model.Bicycle;
 import model.Cyclist;
-import model.ParkingSpot;
+import ui.dialogs.BicycleEditorDialog;
 import ui.exceptions.NoBicyclesFoundException;
-import ui.exceptions.NoParkingSpotsFoundException;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class BicycleListManager implements ActionListener {
+public class BicycleListManager implements ActionListener, ListSelectionListener {
     Cyclist cyclist;
     Scanner scanner;
     Bicycle output;
@@ -44,6 +45,7 @@ public class BicycleListManager implements ActionListener {
     private JPanel optionPanel; // Panel that contains the following three buttons
     private JButton addBicycleButton;
     private JButton editBicycleButton;
+    private JButton removeBicycleButton;
     private JButton proceedButton;
     private List<Bicycle> searchResults; // Stores user query's search results
 
@@ -95,6 +97,7 @@ public class BicycleListManager implements ActionListener {
         queryList = new JList<>();
         queryList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         queryList.setLayoutOrientation(JList.VERTICAL);
+        queryList.addListSelectionListener(this);
 
         listPanel.add(queryList);
 
@@ -102,24 +105,37 @@ public class BicycleListManager implements ActionListener {
         panel.add(listPanel, BorderLayout.CENTER);
     }
 
-    // MODIFIES: optionPanel, addBicycleButton, editBicycleButton and panel
+    // MODIFIES: optionPanel, addBicycleButton, editBicycleButton and removeBicycleButton
     // EFFECTS:  Instantiates and adds all elements of the third (options) row of the GUI to panel.
     private void constructOptionPanel() {
         optionPanel = new JPanel(new GridLayout(1,3));
         addBicycleButton = new JButton("Add Bicycle");
         editBicycleButton = new JButton("Edit Bicycle");
+        removeBicycleButton = new JButton("Remove Bicycle");
         proceedButton = new JButton();
 
         addBicycleButton.addActionListener(this);
         editBicycleButton.addActionListener(this);
+        removeBicycleButton.addActionListener(this);
         proceedButton.addActionListener(this);
+
+        editBicycleButton.setEnabled(false);
+        removeBicycleButton.setEnabled(false);
 
         addBicycleButton.setActionCommand("addBicycle");
         editBicycleButton.setActionCommand("editBicycle");
+        removeBicycleButton.setActionCommand("removeBicycle");
         proceedButton.setActionCommand("proceed");
 
+        addOptionButtonsToPanel();
+    }
+
+    // MODIFIES: optionPanel and panel
+    // EFFECTS:  Adds buttons to optionPanel, which is then added to panel
+    private void addOptionButtonsToPanel() {
         optionPanel.add(addBicycleButton);
         optionPanel.add(editBicycleButton);
+        optionPanel.add(removeBicycleButton);
         optionPanel.add(proceedButton);
         optionPanel.setVisible(true);
         panel.add(optionPanel, BorderLayout.PAGE_END);
@@ -160,7 +176,6 @@ public class BicycleListManager implements ActionListener {
 
         return bicycle;
     }
-
 
     // MODIFIES: cyclist
     // EFFECTS:  Creates new bicycle according to the user's input and adds it to the currentCyclist's list of bicycles.
@@ -259,10 +274,39 @@ public class BicycleListManager implements ActionListener {
             setSearchResultsAndQueryList(false);
         } else if (actionCommand.equals("showAllBicycles")) {
             setSearchResultsAndQueryList(true);
-        } // else if (actionCommand.equals("addBicycle")) {
-//
-//        } else if (actionCommand.equals("addBicycle")) {
-//
-//        }
+        } else if (actionCommand.equals("addBicycle")) {
+            BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Add a bicycle");
+            bicycleEditorDialog.initializeDialog(new Bicycle());
+            cyclist.addBicycle(bicycleEditorDialog.getBicycle());
+            setSearchResultsAndQueryList(true);
+        } else if (actionCommand.equals("editBicycle")) {
+            Bicycle selectedBicycle = searchResults.get(queryList.getSelectedIndex());
+            List<String> defaultFieldValues = new ArrayList<>();
+
+            defaultFieldValues.add(selectedBicycle.getName());
+            defaultFieldValues.add(selectedBicycle.getBrand());
+            defaultFieldValues.add(selectedBicycle.getModel());
+            defaultFieldValues.add(selectedBicycle.getDescription());
+            defaultFieldValues.add(selectedBicycle.getSerialNumber());
+
+            BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Edit “"
+                    + selectedBicycle.getName() + "”", defaultFieldValues);
+            bicycleEditorDialog.initializeDialog(selectedBicycle);
+            // Because a pointer of selectedBicycle is passed, the bicycle object is modified directly from the
+            // bicycleEditorDialog
+            setSearchResultsAndQueryList(true);
+        }
+    }
+
+    // EFFECTS:  Sets
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (!queryList.isSelectionEmpty()) {
+            editBicycleButton.setEnabled(true);
+            removeBicycleButton.setEnabled(true);
+        } else {
+            editBicycleButton.setEnabled(false);
+            removeBicycleButton.setEnabled(false);
+        }
     }
 }
