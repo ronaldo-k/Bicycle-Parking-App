@@ -27,3 +27,21 @@ cycling and parking.
 - As a user, I want to be able to save my user profiles with their respective bicycles and theft reports.
 - As a user, I want to be able to view and add to my user profiles, their respective bicycles and theft reports after 
   closing and reopening the program. 
+
+## Instructions for grader
+
+- The program prompts the user with a dialog asking whether they want to load the saved data upon startup. Then, the 
+  user selection prompt is shown in the terminal.
+- In the main menu (GUI frame), you can access the required “Add multiple Xs to Y” events by pressing the “View and 
+  Edit Bicycles button”. This opens a dialog.
+  - The first required event is adding bicycles. It can be accessed with the “Add Bicycle” button on the dialog. This 
+    prompts the user with another dialog with which the user can insert information about the bicycle being added. After 
+    pressing “Confirm”, the new bicycle should be visible, along with the user's other bicycles, in the first dialog.
+  - The second required event is editing bicycles. It can be accessed with the “Edit Bicycle” button on the dialog, 
+    which shows a prompt similar to that used to add bicycles.
+- The graphical component can be seen using the dialog that opens when pressing “View Parking Spots”. Input a postal 
+  code in the “Postal Code” field and press search to search for parking spots within the postal code. Select one of 
+  the listed parking spots and press more information. This opens a dialog containing the graphical component (a 
+  photo of the parking spot) together with information regarding the selected parking spot.  
+  - Note: The following postal codes have registered parking spots: V6T1Z3, V6T1Z4, V6T2A1, V6T2G9.
+- The program prompts the user with a dialog asking whether they want to save their changes upon closing.
