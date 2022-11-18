@@ -169,13 +169,15 @@ public class ParkingSpotListManager implements ActionListener {
     private void generateMoreInformationDialog(int index) {
         JDialog moreInformationDialog = new JDialog();
         moreInformationDialog.setSize(new Dimension(640, 560));
+        moreInformationDialog.setAlwaysOnTop(true);
+        moreInformationDialog.setModal(true);
 
         JPanel moreInformationPanel = new JPanel(new FlowLayout());
 
         JTextArea moreInformationText = new JTextArea(14, 48);
         moreInformationText.setEditable(false);
         String text =
-                searchResults.get(index).getFormattedDescription("") + "\n" + searchResults.get(index).getUniqueID();
+                searchResults.get(index).getFormattedDescription("");
 
         ImageIcon image = new ImageIcon(imagesFolder + searchResults.get(index).getUniqueID() + ".jpg");
         JLabel moreInformationPicture = new JLabel(image);
