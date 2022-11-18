@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ParkingSpotTest {
     private Address parkingSpotAddress1;
     private ParkingSpot parkingSpot1;
+    private ParkingSpot parkingSpot2;
 
     @BeforeEach
     public void setup() {
@@ -15,6 +16,7 @@ public class ParkingSpotTest {
         parkingSpot1 = new ParkingSpot(parkingSpotAddress1, "Rack", 14, 0, 0,
                 false, false, true, "To the South of the X wing of the ICICS/CS building. Visible from the X wing " +
                 "first floor lounge");
+        parkingSpot2 = new ParkingSpot(parkingSpotAddress1, "Parkade", 20, 10, 1, true, true, false, "description");
     }
 
     @Test
@@ -58,12 +60,26 @@ public class ParkingSpotTest {
 
     @Test
     public void getFormattedDescriptionTest() {
-        String expected = "2366 MAIN MALL, VANCOUVER, V6T1Z4\n\tType: Rack\n\tCapacity: 14\n\tPrice: $0.0 / 0 h\n\tIs" +
+        String expected1 = "2366 MAIN MALL, VANCOUVER, V6T1Z4\n\nType: Rack\nCapacity: 14\nPrice: Free\nIs" +
                 " " +
-                "it covered? false\n\tIs its access restricted? false\n\tDoes it require a lock? true\n\tNumber of " +
-                "theft reports registered: 0\n\tDetails: To the South of the X wing of the ICICS/CS building. Visible" +
+                "it covered? No\nIs its access restricted? No\nDoes it require a lock? Yes\nNumber of " +
+                "theft reports registered: 0\nDetails: To the South of the X wing of the ICICS/CS building. Visible" +
                 " from the X wing first floor lounge";
+        String expected2 = "2366 MAIN MALL, VANCOUVER, V6T1Z4\n\nType: Parkade\nCapacity: 20\nPrice: $0.10 / 1 h\nIs" +
+                " " +
+                "it covered? Yes\nIs its access restricted? Yes\nDoes it require a lock? No\nNumber of " +
+                "theft reports registered: 0\nDetails: description";
 
-        assertEquals(expected, parkingSpot1.getFormattedDescription(""));
+        assertEquals(expected1, parkingSpot1.getFormattedDescription(""));
+        assertEquals(expected2, parkingSpot2.getFormattedDescription(""));
+    }
+
+    @Test
+    public void getUniqueIDTest() {
+        String expected1 = "2366MainMallVancouverV6T1Z4Rack1400001";
+        String expected2 = "2366MainMallVancouverV6T1Z4Parkade20101110";
+
+        assertEquals(expected1, parkingSpot1.getUniqueID());
+        assertEquals(expected2, parkingSpot2.getUniqueID());
     }
 }

@@ -115,8 +115,8 @@ public class ParkingSpot implements PointOfInterest, Saveable {
          Note: pretab is a sequence of tab (i.e. \t) characters placed before each new line.
          */
     public String getFormattedDescription(String pretab) {
-        String pricePeriodString = "$" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h\n";
-        if (price == 0 && period == 0) {
+        String pricePeriodString = "$" + this.price / 100 + "." + this.price % 100 + " / " + this.period + " h";
+        if (price == 0) {
             pricePeriodString = "Free";
         }
 
