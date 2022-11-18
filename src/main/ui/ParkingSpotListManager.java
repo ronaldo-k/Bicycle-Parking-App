@@ -166,15 +166,17 @@ public class ParkingSpotListManager implements ActionListener {
         dialog.setVisible(true);
     }
 
+    // EFFECTS:  Generates “More Information” dialog according to the parking spot in the index position of the
+    // queryList.
     private void generateMoreInformationDialog(int index) {
         JDialog moreInformationDialog = new JDialog();
-        moreInformationDialog.setSize(new Dimension(640, 560));
+        moreInformationDialog.setSize(new Dimension(640, 580));
         moreInformationDialog.setAlwaysOnTop(true);
         moreInformationDialog.setModal(true);
 
         JPanel moreInformationPanel = new JPanel(new FlowLayout());
 
-        JTextArea moreInformationText = new JTextArea(14, 48);
+        JTextArea moreInformationText = new JTextArea(15, 48);
         moreInformationText.setEditable(false);
         String text =
                 searchResults.get(index).getFormattedDescription("");

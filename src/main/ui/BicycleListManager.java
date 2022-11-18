@@ -260,12 +260,12 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
         return output;
     }
 
-    public List<Bicycle> getSearchResults() {
-        return searchResults;
-    }
-
+    // MODIFIES: output
+    // EFFECTS:  Sets output to the selected item in queryList (if index != -1) and hides dialog.
     private void setOutputByIndexAndHide(int index) {
-        output = searchResults.get(index);
+        if (index != -1) {
+            output = searchResults.get(index);
+        }
         dialog.setVisible(false);
     }
 

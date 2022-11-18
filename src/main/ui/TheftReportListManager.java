@@ -18,7 +18,6 @@ public class TheftReportListManager {
     List<TheftReport> theftReports;
     Cyclist cyclist;
     Scanner scanner;
-    ParkingSpot outputFromParkingSpotDialog;
 
     ParkingSpotListManager parkingSpotListManager;
     BicycleListManager bicycleListManager;

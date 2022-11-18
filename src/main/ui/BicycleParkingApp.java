@@ -118,6 +118,8 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         theftReportListManager.viewTheftReports();
     }
 
+    // MODIFIES: this (if data is saved)
+    // EFFECTS:  Shows “Save and Quit” prompt. Saves and/or quits according to the user's input.
     private void saveAndQuitPrompt() {
         String[] options = {"Save", "Do Not Save", "Cancel"};
 
@@ -150,7 +152,7 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         } else if (command.equals("viewUserProfile")) {
             viewUserProfile();
         } else if (command.equals("changeUser")) {
-            cyclistListManager.selectCyclist();
+            currentCyclist = cyclistListManager.selectCyclist();
         } else if (command.equals("quit")) {
             saveAndQuitPrompt(); // something else
         }
