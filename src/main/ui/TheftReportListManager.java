@@ -49,7 +49,6 @@ public class TheftReportListManager {
 
     // MODIFIES: this
     // EFFECTS:  Adds a theft report with user-provided details to the list of theftReports.
-    // TODO: Reduce method length
     public void addTheftReport(ParkingSpotListManager parkingSpotListManager, BicycleListManager bicycleListManager) {
         Bicycle bicycle;
         LocalDate date;
@@ -59,9 +58,6 @@ public class TheftReportListManager {
 
         System.out.printf("\nFILE A THEFT REPORT\n");
         bicycle = getBicycleForTheftReport(bicycleListManager);
-        if (bicycle == null) { // TODO: REMOVE THIS IF STATEMENT ONCE BICYCLE GUI IS IMPLEMENTED
-            return;
-        }
         parkingSpot = getParkingSpotForTheftReport(parkingSpotListManager);
         date = getDateFromUser();
 
@@ -69,16 +65,16 @@ public class TheftReportListManager {
         theftReports.add(theftReport);
         cyclist.addTheftReport(theftReport);
         parkingSpot.incrementTheftReportNumber();
-        System.out.println("< Your theft report has been filed. > You may view it by entering [5] in the main menu.");
+        System.out.println("< Your theft report has been filed. >");
     }
 
-    // TODO: DOCUMENTATION FOR THIS METHOD
+    // EFFECTS: Returns bicycle selected by the user with bicycleListManager's GUI
     private Bicycle getBicycleForTheftReport(BicycleListManager bicycleListManager) {
         bicycleListManager.initializeViewBicyclesWindow("Please select which bicycle was stolen", "Confirm");
         return bicycleListManager.getOutput();
     }
 
-    // TODO: DOCUMENTATION FOR THIS METHOD
+    // EFFECTS: Returns parkingSpot selected by the user with parkingSpotListManager's GUI
     private ParkingSpot getParkingSpotForTheftReport(ParkingSpotListManager parkingSpotListManager) {
         parkingSpotListManager.initializeSearchParkingSpotsWindow("Please input the postal code of the"
                 + "parking spot from which your bicycle was stolen", "Confirm");

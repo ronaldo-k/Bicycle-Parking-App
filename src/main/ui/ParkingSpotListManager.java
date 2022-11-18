@@ -206,17 +206,6 @@ public class ParkingSpotListManager implements ActionListener {
         if (searchResults.size() == 0) {
             throw new NoParkingSpotsFoundException();
         }
-
-        // This maintains the terminal-based implementation of viewParkingSpots for use in
-        // theftReportListManager.addTheftReport().
-
-//        if (!useGUI) {
-//            System.out.println("The following parking spots with the postal code " + inputPostalCode
-//                    + " have been found:");
-//            for (int i = 0; i < searchResults.size(); i++) {
-//                System.out.printf("\t[%d] %s\n", i + 1, searchResults.get(i).getFormattedDescription("\t"));
-//            }
-//        }
         return searchResults;
     }
 

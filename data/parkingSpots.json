@@ -44,7 +44,7 @@
       "buildingNumber": "6245"
     },
     "price": 0,
-    "description": "To the West of the Forest Sciences building, facing Engineering Road.",
+    "description": "To the West of the Hugh Dempster Pavilion, facing Engineering Road.",
     "isRestrictedAccess": false,
     "type": "Rack",
     "isCovered": true,
@@ -61,7 +61,7 @@
       "buildingNumber": "6335"
     },
     "price": 0,
-    "description": "To the East of the Selkirk block of the Thunderbird Student Residence, facing Thunderbird Crescent",
+    "description": "To the East of the Selkirk block of the Thunderbird Student Residence, facing Thunderbird Crescent.",
     "isRestrictedAccess": false,
     "type": "Rack",
     "isCovered": false,

@@ -23,10 +23,12 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
     Cyclist cyclist;
     Scanner scanner;
     Bicycle output;
+    JFrame parent;
 
     // EFFECTS: Creates a BicycleListManager that maintains cyclist's list of bicycles.
-    public BicycleListManager(Cyclist cyclist) {
+    public BicycleListManager(Cyclist cyclist, JFrame parent) {
         this.cyclist = cyclist;
+        this.parent = parent;
         scanner = new Scanner(System.in);
         constructGUI();
     }
@@ -150,42 +152,30 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
         dialog.setVisible(true);
     }
 
-    // EFFECTS:  Obtains the user's input to create and return a bicycle object.
-    private Bicycle createBicycle() {
-        String inputName;
-        String inputBrand;
-        String inputModel;
-        String inputDescription;
-        String inputSerialNumber;
-        Bicycle bicycle;
-
-        System.out.printf("First, enter a name to identify your bicycle.\n\tName: ");
-        inputName = scanner.nextLine();
-        System.out.printf("Now, supply the following information:\n\tBrand: ");
-        inputBrand = scanner.nextLine();
-        System.out.printf("\tModel: ");
-        inputModel = scanner.nextLine();
-        System.out.printf("Add a description of any identifying details, such as accessories, decals, etc.: \n"
-                + "(Optional – Press enter to skip)\n");
-        inputDescription = scanner.nextLine();
-        System.out.printf("Lastly, enter the bicycle's serial number: \n(This can usually be found under the "
-                + "bottom bracket)\n");
-        inputSerialNumber = scanner.nextLine();
-
-        bicycle = new Bicycle(inputName, inputBrand, inputModel, inputDescription, inputSerialNumber);
-
-        return bicycle;
+    // MODIFIES: cyclist
+    // EFFECTS:  Creates new bicycle according to the user's input and adds it to the currentCyclist's list of bicycles.
+    private void addBicycle() {
+        BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Add a bicycle");
+        bicycleEditorDialog.initializeDialog(new Bicycle());
+        cyclist.addBicycle(bicycleEditorDialog.getBicycle());
+        setSearchResultsAndQueryList(true);
     }
 
     // MODIFIES: cyclist
-    // EFFECTS:  Creates new bicycle according to the user's input and adds it to the currentCyclist's list of bicycles.
-    public void addBicycle() {
-        Bicycle bicycle;
-        System.out.printf("\nADD A BICYCLE\n");
-        bicycle = createBicycle();
-        cyclist.addBicycle(bicycle);
-        System.out.println("< Your bicycle has been successfully added! > You can view it by entering [5] in the main"
-                + " menu.");
+    // EFFECTS:  Displays selected bicycle in a Bicycle Editor GUI and modifies bicycle accordingly.
+    private void editBicycle() {
+        Bicycle selectedBicycle = searchResults.get(queryList.getSelectedIndex());
+        List<String> defaultFieldValues = new ArrayList<>();
+
+        defaultFieldValues.add(selectedBicycle.getName());
+        defaultFieldValues.add(selectedBicycle.getBrand());
+        defaultFieldValues.add(selectedBicycle.getModel());
+        defaultFieldValues.add(selectedBicycle.getDescription());
+        defaultFieldValues.add(selectedBicycle.getSerialNumber());
+
+        BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Edit “"
+                + selectedBicycle.getName() + "”", defaultFieldValues);
+        bicycleEditorDialog.initializeDialog(selectedBicycle);
     }
 
     // REQUIRES: As required by the definition of the Bicycle class, serialNumbers are unique.
@@ -211,31 +201,25 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
     }
 
     // MODIFIES: cyclist
-    // EFFECTS:  Removes the bicycle chosen from cyclist's list of bicycles.
+    // EFFECTS:  Displays a Confirmation prompt and removes bicycle in accordance to the user's response.
     public void removeBicycle() {
-        int inputBicycleIndex;
-        Bicycle bicycle;
+        String[] options = {"Remove", "Cancel"};
+        Bicycle bicycle = searchResults.get(queryList.getSelectedIndex());
+        int result = JOptionPane.showOptionDialog(parent,
+                "Are you sure you want to remove “" + bicycle.getName() + "”?",  "Remove a bicycle",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
-        System.out.printf("\nREMOVE A BICYCLE");
-        try {
-            viewBicycles(null);
-        } catch (NoBicyclesFoundException e) {
-            System.out.println("\nThis user currently has no registered bicycles.");
+        switch (result) {
+            case 0:
+                cyclist.getBicycles().remove(bicycle);
+                break;
+            default:
+                break;
         }
-        if (cyclist.getBicycles().isEmpty()) {
-            return;
-        }
-        System.out.println("Which bicycle would you like to remove?");
-
-        inputBicycleIndex = scanner.nextInt();
-        inputBicycleIndex--;
-
-        bicycle = cyclist.getBicycles().get(inputBicycleIndex);
-
-        System.out.printf("< \"%s\" has been removed from your list. >\n", bicycle.getName());
-        cyclist.removeBicycle(bicycle);
     }
 
+    // MODIFIES: searchResults and queryList
+    // EFFECTS:  Sets searchResults and queryList according to the user's search query.
     private void setSearchResultsAndQueryList(Boolean getAll) {
         List<String> formattedSearchResults = new ArrayList<>();
 
@@ -246,13 +230,26 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
                 viewBicycles(entry.getText());
             }
             for (Bicycle bicycle: searchResults) {
-                formattedSearchResults.add(bicycle.getName());
+                formattedSearchResults.add(bicycle.getName() + " – " + bicycle.getBrand() + " " + bicycle.getModel()
+                        + " – " + bicycle.getSerialNumber() + " – " + bicycle.getDescription());
             }
         } catch (NoBicyclesFoundException exception) {
-            formattedSearchResults.add("No parking spots with this postal code were found.");
+            formattedSearchResults.add("No bicycles were found.");
         }
 
         queryList.setListData(formattedSearchResults.toArray());
+    }
+
+    // EFFECTS: Prints a list of cyclist's bicycles in the terminal.
+    public void viewBicyclesInTerminal() {
+        if (cyclist.getBicycles().size() == 0) {
+            System.out.println("You currently have no bicycles registered.");
+            return;
+        }
+        System.out.println("\nYou currently have " + cyclist.getBicycles().size() + " bicycles registered.");
+        for (int i = 0; i < cyclist.getBicycles().size(); i++) {
+            System.out.printf("\t[%d] %s\n", i + 1, cyclist.getBicycles().get(i).getFormattedDescription("\t"));
+        }
     }
 
     public void setCyclist(Cyclist cyclist) {
@@ -267,6 +264,11 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
         return searchResults;
     }
 
+    private void setOutputByIndexAndHide(int index) {
+        output = searchResults.get(index);
+        dialog.setVisible(false);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
@@ -275,30 +277,22 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
         } else if (actionCommand.equals("showAllBicycles")) {
             setSearchResultsAndQueryList(true);
         } else if (actionCommand.equals("addBicycle")) {
-            BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Add a bicycle");
-            bicycleEditorDialog.initializeDialog(new Bicycle());
-            cyclist.addBicycle(bicycleEditorDialog.getBicycle());
+            addBicycle();
             setSearchResultsAndQueryList(true);
         } else if (actionCommand.equals("editBicycle")) {
-            Bicycle selectedBicycle = searchResults.get(queryList.getSelectedIndex());
-            List<String> defaultFieldValues = new ArrayList<>();
-
-            defaultFieldValues.add(selectedBicycle.getName());
-            defaultFieldValues.add(selectedBicycle.getBrand());
-            defaultFieldValues.add(selectedBicycle.getModel());
-            defaultFieldValues.add(selectedBicycle.getDescription());
-            defaultFieldValues.add(selectedBicycle.getSerialNumber());
-
-            BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Edit “"
-                    + selectedBicycle.getName() + "”", defaultFieldValues);
-            bicycleEditorDialog.initializeDialog(selectedBicycle);
-            // Because a pointer of selectedBicycle is passed, the bicycle object is modified directly from the
-            // bicycleEditorDialog
+            editBicycle();
             setSearchResultsAndQueryList(true);
+        } else if (actionCommand.equals("removeBicycle")) {
+            removeBicycle();
+            setSearchResultsAndQueryList(true);
+        } else if (actionCommand.equals("proceed")) {
+            setOutputByIndexAndHide(queryList.getSelectedIndex());
         }
     }
 
-    // EFFECTS:  Sets
+    // MODIFIES: editBicycleButton and removeBicycleButton
+    // EFFECTS:  Activates or deactivates the Edit Bicycle and Remove Bicycle buttons according to whether there is a
+    // bicycle selected.
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (!queryList.isSelectionEmpty()) {

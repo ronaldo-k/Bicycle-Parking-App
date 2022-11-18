@@ -36,9 +36,11 @@ public class BicycleEditorDialog implements ActionListener {
 
         dialog = new JDialog();
         dialog.setTitle(dialogTitle);
+        dialog.setMinimumSize(new Dimension(640, 200));
+        dialog.setAlwaysOnTop(true);
         dialog.setModal(true);
 
-        panel = new JPanel(new GridLayout(0, 1));
+        panel = new JPanel(new BorderLayout());
         entriesPanel = new JPanel(new GridLayout(0, 2));
         entryLabels = new ArrayList<>();
         entries = new ArrayList<>();
@@ -75,8 +77,8 @@ public class BicycleEditorDialog implements ActionListener {
     // MODIFIES: panel, dialog and entriesPanel
     // EFFECTS:  Adds entriesPanel and confirmButton to panel, adds panel to dialog, and set panels to visible.
     public void addAndSetElementsVisible() {
-        panel.add(entriesPanel);
-        panel.add(confirmButton);
+        panel.add(entriesPanel, BorderLayout.CENTER);
+        panel.add(confirmButton, BorderLayout.PAGE_END);
         dialog.add(panel);
 
         entriesPanel.setVisible(true);

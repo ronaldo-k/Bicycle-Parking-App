@@ -18,8 +18,8 @@ import java.util.Scanner;
  */
 
 public class BicycleParkingApp extends JFrame implements ActionListener {
-    public static final int WIDTH = 640;
-    public static final int HEIGHT = 480;
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 280;
 
     private CyclistListManager cyclistListManager;
     private ParkingSpotListManager parkingSpotListManager;
@@ -53,7 +53,7 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
 
         currentCyclist = cyclistListManager.selectCyclist();
 
-        bicycleListManager = new BicycleListManager(currentCyclist);
+        bicycleListManager = new BicycleListManager(currentCyclist, this);
         theftReportListManager = new TheftReportListManager(currentCyclist);
 
         initializeGraphics();
@@ -109,38 +109,10 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         return;
     }
 
-    // TODO: Review according to what is not implemented in the GUI.
-    // MODIFIES: May modify currentCyclist, depending on the chosen option.
-    // EFFECTS: Prints main menu and waits for user's input.
-//    private int cyclistMainMenu() {
-//        int input;
-//        System.out.println("\nMAIN MENU\nPlease enter the number of one of the options below:\n"
-//                + "\t[1] Add bicycle \n\t[2] Remove bicycle \n"
-//                + "\t[3] Search for a parking spot \n\t[4] File theft report \n"
-//                + "\t[5] View user profile, theft reports and bicycles \n"
-//                + "\t[6] Change user \n\t[7] Save changes and quit");
-//        input = scanner.nextInt();
-//        switch (input) {
-//            case 1: bicycleListManager.addBicycle();
-//                break;
-//            case 2: bicycleListManager.removeBicycle();
-//                break;
-//            case 3: parkingSpotListManager.searchParkingSpots();
-//                break;
-//            case 4: theftReportListManager.addTheftReport(parkingSpotListManager, bicycleListManager);
-//                break;
-//            case 5: viewUserProfile();
-//                break;
-//            default:
-//                return input;
-//        }
-//        return 0;
-//    }
-
     // EFFECTS: Prints out the currentCyclist's bicycles and filed theft reports.
     private void viewUserProfile() {
         System.out.println("Your name is: " + currentCyclist.getName());
-        System.out.println("TODO view user's bicycles");
+        bicycleListManager.viewBicyclesInTerminal();
         //bicycleListManager.viewBicycles("");
         System.out.printf("\n");
         theftReportListManager.viewTheftReports();
