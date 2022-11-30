@@ -63,6 +63,9 @@ was added to User1's bicycles. The following user actions were taken:
   shows all registered bicycles in the list, which prompts the last event to be listed.
 - The buttons “Cancel”, “Quit” and “Do Not Save” are clicked, exiting the application.
 
+The corresponding log has been copied below:
+
+```
 Tue Nov 29 19:23:53 PST 2022
 A bicycle of name My bicycle has been displayed.
 Tue Nov 29 19:24:13 PST 2022
@@ -71,3 +74,4 @@ Tue Nov 29 19:25:10 PST 2022
 A bicycle of name New Bicycle has been added to User1's bicycles.
 Tue Nov 29 19:25:10 PST 2022
 A bicycle of name New Bicycle has been displayed.
+```
