@@ -31,6 +31,7 @@ public class CyclistTest {
     @BeforeEach
     public void setup() {
         cyclist = new Cyclist(cyclistName);
+        EventLog.getInstance().clear();
     }
 
     @Test
@@ -77,6 +78,19 @@ public class CyclistTest {
     }
 
     @Test
+    public void addBicycleLogTest() {
+        cyclist.addBicycle(bicycle1);
+        cyclist.addBicycle(bicycle2);
+        String[] expectedDescriptions = {"Event log cleared.", "A bicycle of name E-bike has been added to Adam's "
+                + "bicycles.", "A bicycle of name Old bike has been added to Adam's bicycles."};
+        int i = 0;
+        for (Event event : EventLog.getInstance()) {
+            assertEquals(expectedDescriptions[i], event.getDescription());
+            i++;
+        }
+    }
+
+    @Test
     public void addBicycleMultipleAttemptsTest() {
         cyclist.addBicycle(bicycle1);
         cyclist.addBicycle(bicycle1);
@@ -106,6 +120,24 @@ public class CyclistTest {
 
         cyclist.removeBicycle(bicycle2);
         assertEquals(0, cyclist.getBicycles().size());
+    }
+
+    @Test
+    public void removeBicycleLogTest() {
+        cyclist.addBicycle(bicycle1);
+        cyclist.addBicycle(bicycle2);
+        cyclist.removeBicycle(bicycle2);
+        cyclist.removeBicycle(bicycle1);
+        String[] expectedDescriptions = {"Event log cleared.",
+                "A bicycle of name E-bike has been added to Adam's bicycles.",
+                "A bicycle of name Old bike has been added to Adam's bicycles.",
+                "A bicycle of name Old bike has been removed from Adam's bicycles.",
+                "A bicycle of name E-bike has been removed from Adam's bicycles."};
+        int i = 0;
+        for (Event event : EventLog.getInstance()) {
+            assertEquals(expectedDescriptions[i], event.getDescription());
+            i++;
+        }
     }
 
     @Test

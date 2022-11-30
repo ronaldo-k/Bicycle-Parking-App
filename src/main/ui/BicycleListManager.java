@@ -158,7 +158,6 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
         BicycleEditorDialog bicycleEditorDialog = new BicycleEditorDialog("Add a bicycle");
         bicycleEditorDialog.initializeDialog(new Bicycle());
         cyclist.addBicycle(bicycleEditorDialog.getBicycle());
-        setSearchResultsAndQueryList(true);
     }
 
     // MODIFIES: cyclist
@@ -211,7 +210,7 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
 
         switch (result) {
             case 0:
-                cyclist.getBicycles().remove(bicycle);
+                cyclist.removeBicycle(bicycle);
                 break;
             default:
                 break;
@@ -230,8 +229,7 @@ public class BicycleListManager implements ActionListener, ListSelectionListener
                 viewBicycles(entry.getText());
             }
             for (Bicycle bicycle: searchResults) {
-                formattedSearchResults.add(bicycle.getName() + " – " + bicycle.getBrand() + " " + bicycle.getModel()
-                        + " – " + bicycle.getSerialNumber() + " – " + bicycle.getDescription());
+                formattedSearchResults.add(bicycle.getShortDescription());
             }
         } catch (NoBicyclesFoundException exception) {
             formattedSearchResults.add("No bicycles were found.");

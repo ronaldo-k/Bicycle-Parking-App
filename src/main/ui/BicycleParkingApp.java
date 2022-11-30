@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.Event;
 import ui.exceptions.NoBicyclesFoundException;
 
 import javax.swing.*;
@@ -130,13 +131,21 @@ public class BicycleParkingApp extends JFrame implements ActionListener {
         switch (result) {
             case 0: // "Save"
                 saveData();
+                printLog();
                 System.exit(0);
                 break;
             case 1: // "Do Not Save"
+                printLog();
                 System.exit(0);
                 break;
             default: // "Cancel"
                 break;
+        }
+    }
+
+    private void printLog() {
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event.toString());
         }
     }
 

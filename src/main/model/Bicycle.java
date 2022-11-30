@@ -50,6 +50,13 @@ public class Bicycle implements Saveable {
                 + pretab + "\tSerial number: " + this.serialNumber;
     }
 
+    // EFFECTS: Returns a one-line formatted description of the bicycle
+    public String getShortDescription() {
+        EventLog.getInstance().logEvent(new Event("A bicycle of name " + name + " has been displayed."));
+        // This description is formatted as follows: (Name) – (Brand) (Model) – (Serial number) – (Description)
+        return name + " – " + brand + " " + model + " – " + serialNumber + " – " + description;
+    }
+
     public String getName() {
         return name;
     }

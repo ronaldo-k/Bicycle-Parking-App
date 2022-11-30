@@ -3,6 +3,9 @@ package model;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BicycleTest {
@@ -12,6 +15,7 @@ public class BicycleTest {
     public void setup() {
         bicycle = new Bicycle("Green bike", "Brandname", "Model A",
                 "None", "ABC1234");
+        EventLog.getInstance().clear();
     }
 
     @Test
@@ -43,6 +47,22 @@ public class BicycleTest {
     public void getFormattedDescriptionWithPretabTest() {
         assertEquals("GREEN BIKE\n\t\tBrand: Brandname\n\t\tModel: Model A" +
                 "\n\t\tDescription: None\n\t\tSerial number: ABC1234", bicycle.getFormattedDescription("\t"));
+    }
+
+    @Test
+    public void getShortDescriptionTest() {
+        assertEquals("Green bike – Brandname Model A – ABC1234 – None", bicycle.getShortDescription());
+    }
+
+    @Test
+    public void getShortDescriptionEventLogTest() {
+        bicycle.getShortDescription();
+        String[] expectedDescriptions = {"Event log cleared.", "A bicycle of name Green bike has been displayed."};
+        int i = 0;
+        for (Event event : EventLog.getInstance()) {
+            assertEquals(expectedDescriptions[i], event.getDescription());
+            i++;
+        }
     }
 
     @Test

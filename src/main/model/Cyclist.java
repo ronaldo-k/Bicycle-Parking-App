@@ -40,6 +40,8 @@ public class Cyclist extends User {
             return;
         }
         bicycles.add(bicycle);
+        EventLog.getInstance().logEvent(new Event("A bicycle of name " + bicycle.getName() + " has been added to "
+                + name + "'s bicycles."));
     }
 
     // REQUIRES: bicycle is in bicycles
@@ -47,6 +49,8 @@ public class Cyclist extends User {
     // EFFECTS:  bicycle is removed from bicycles list.
     public void removeBicycle(Bicycle bicycle) {
         bicycles.remove(bicycle);
+        EventLog.getInstance().logEvent(new Event("A bicycle of name " + bicycle.getName() + " has been removed from "
+                + name + "'s bicycles."));
     }
 
     // MODIFIES: this

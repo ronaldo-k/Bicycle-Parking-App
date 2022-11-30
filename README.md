@@ -45,3 +45,29 @@ cycling and parking.
   photo of the parking spot) together with information regarding the selected parking spot.  
   - Note: The following postal codes have registered parking spots: V6T1Z3, V6T1Z4, V6T2A1, V6T2G9.
 - The program prompts the user with a dialog asking whether they want to save their changes upon closing.
+
+## Phase 4: Task 2
+
+The following log has been obtained in an execution of the program where “My bicycle” was removed and “new bicycle” 
+was added to User1's bicycles. The following user actions were taken:
+
+- Upon startup, the option to load the saved data (from data/cyclists.json and data/parkingSpots.json) was selected.
+- In the terminal, User1 was chosen from a list of two users. User1 has a single bicycle called “My bicycle” already 
+  registered.
+- In the main menu, the “View and Edit Bicycles” item was selected.
+- In the “View and Edit Bicycles” prompt, the “Show All Bicycles” button was pressed once.
+- “My bicycle” was selected in the list of bicycles and removed with the “Remove Bicycle” button. The program would 
+  show here the current state of the list of bicycles if there were any, which would register as a series of “A 
+  bicycle of name X has been displayed” events.
+- The “Add Bicycle” button is clicked and a bicycle of name “New bicycle” is added. Then, the program automatically 
+  shows all registered bicycles in the list, which prompts the last event to be listed.
+- The buttons “Cancel”, “Quit” and “Do Not Save” are clicked, exiting the application.
+
+Tue Nov 29 19:23:53 PST 2022
+A bicycle of name My bicycle has been displayed.
+Tue Nov 29 19:24:13 PST 2022
+A bicycle of name My bicycle has been removed from User1's bicycles.
+Tue Nov 29 19:25:10 PST 2022
+A bicycle of name New Bicycle has been added to User1's bicycles.
+Tue Nov 29 19:25:10 PST 2022
+A bicycle of name New Bicycle has been displayed.
