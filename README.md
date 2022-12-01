@@ -75,3 +75,28 @@ A bicycle of name New Bicycle has been added to User1's bicycles.
 Tue Nov 29 19:25:10 PST 2022
 A bicycle of name New Bicycle has been displayed.
 ```
+
+## Phase 4: Task 3
+
+According to the UML diagram that represents the program, certain elements of the project could be refactored to 
+improve its clarity, reduce coupling and increase cohesion. Of the many possible improvements, I highlight a more 
+consistent employment of inheritance and a more precise separation between user interface and model classes.
+
+Certain classes that have comparable functions, namely ArrayJsonWriter and the classes that extend ArrayJsonReader, 
+have different inheritance patterns. Whereas ArrayJsonWriter can write objects of any type implementing the Saveable 
+interface to .json files, given that classes that implement Saveable must implement a version of the toJson() method,
+the use of an abstract ArrayJsonReader class that was extended by three classes specific to a certain object is not 
+only inconsistent, but also implies that the code in question cannot be changed easily. This could be solved by 
+including the declaration of a decoding fromJson() method, similar to the parseSaveable() method in the classes that 
+extend SaveableParser, in the Saveable interface.
+
+The ListManager classes, which are part of the ui package, connects the model classes to the ui by both maintaining 
+a list of their designated type and interacting with the user. This implies that the ListManager classes have low 
+cohesion as they group functions which would have been more appropriately split up between classes in both the model 
+and ui packages. Furthermore, the classes in question have a significant number of methods in common, which could 
+have been grouped into an AbstractListManager class.
+
+Also of note are the User abstract class and the PointOfInterest interface. In the scope of a refactoring without 
+the addition of other features to the program, it can be noted that these are redundant and could be removed with no 
+changes to the current features. These were intended to accommodate user stories that were excluded from the 
+project in the interest of time.
