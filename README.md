@@ -46,7 +46,7 @@ cycling and parking.
   - Note: The following postal codes have registered parking spots: V6T1Z3, V6T1Z4, V6T2A1, V6T2G9.
 - The program prompts the user with a dialog asking whether they want to save their changes upon closing.
 
-## Phase 4: Task 2
+## Logging
 
 The following log has been obtained in an execution of the program where “My bicycle” was removed and “new bicycle” 
 was added to User1's bicycles. The following user actions were taken:
@@ -76,7 +76,7 @@ Tue Nov 29 19:25:10 PST 2022
 A bicycle of name New Bicycle has been displayed.
 ```
 
-## Phase 4: Task 3
+## Planned design improvements
 
 According to the UML diagram that represents the program, certain elements of the project could be refactored to 
 improve its clarity, reduce coupling and increase cohesion. Of the many possible improvements, I highlight a more 
